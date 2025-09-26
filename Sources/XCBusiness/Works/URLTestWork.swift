@@ -6,7 +6,8 @@ public actor URLTestWork: @preconcurrency XCWork {
     public let key: String
     internal var task: Task<(), Error>?
     let url: String
-    init(
+    
+    public init(
         url: String
     ) {
         self.url = url

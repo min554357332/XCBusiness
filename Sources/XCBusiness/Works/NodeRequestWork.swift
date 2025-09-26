@@ -7,7 +7,7 @@ public actor NodeRequestWork: @preconcurrency XCWork {
     private var retryCount = 1
     let city_id: Int
     
-    init(city_id: Int) {
+    public init(city_id: Int) {
         self.city_id = city_id
     }
     

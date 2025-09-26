@@ -6,6 +6,8 @@ public actor CitysRequestWork: @preconcurrency XCWork {
     internal var task: Task<[Citys_response], Error>?
     private var retryCount = 0
     
+    public init() {}
+    
     public func run() async throws -> [Sendable & Codable] {
         if self.retryCount == 0 {
             if let oldTask = await XCBusiness.share.rmWork(self.key) {

@@ -12,7 +12,7 @@ public actor ReportRequestWork: @preconcurrency XCWork {
     let event: String
     let duration: Int?
     
-    init(
+    public init(
         name: String,
         retry: Int,
         core: String,

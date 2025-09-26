@@ -7,6 +7,8 @@ public actor IpconfigRequestWork: @preconcurrency XCWork {
     internal var task: Task<IPConfig, Error>?
     private var retryCount = 0
     
+    public init() {}
+    
     public func run() async throws -> [Sendable & Codable] {
         if self.retryCount == 0 {
             if let oldTask = await XCBusiness.share.rmWork(self.key) {
