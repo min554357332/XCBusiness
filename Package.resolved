@@ -1,5 +1,5 @@
 {
-  "originHash" : "71c2cd043f7593e148460a4c0173bafffb5e234d8e17efd782a2ee6d1f902e0c",
+  "originHash" : "e152aba057d35978c412e3688cc535bd64d56ebf1d04b0fe1addb9723f92f8fe",
   "pins" : [
     {
       "identity" : "aes_256_cbc",
@@ -22,7 +22,7 @@
     {
       "identity" : "cache",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/min554357332/Cache.git",
+      "location" : "https://github.com/hyperoslo/Cache.git",
       "state" : {
         "revision" : "24e47109e31b2031cb26e25cc1b81b607496066c",
         "version" : "7.4.0"
@@ -69,8 +69,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/min554357332/XCNetwork.git",
       "state" : {
-        "revision" : "ae592b5aec66444537a9fbc009a3b2069049a8fb",
-        "version" : "0.0.6"
+        "revision" : "8527f21a1e0723fe77722ab1ed5ff154532099db",
+        "version" : "0.0.7"
       }
     }
   ],

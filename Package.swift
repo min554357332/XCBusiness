@@ -16,14 +16,14 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/min554357332/XCNetwork.git", .upToNextMajor(from: "0.0.1")),
+        .package(url: "https://github.com/Alamofire/Alamofire.git", .upToNextMajor(from: "5.10.2")),
+        .package(url: "https://github.com/min554357332/AES_256_CBC.git", .upToNextMajor(from: "0.0.1")),
+        .package(url: "https://github.com/min554357332/XCNetwork.git", .upToNextMajor(from: "0.0.7")),
         .package(url: "https://github.com/min554357332/XCKeychain.git", .upToNextMajor(from: "0.0.1")),
         .package(url: "https://github.com/min554357332/XCCache.git", .upToNextMajor(from: "0.0.1")),
         .package(url: "https://github.com/min554357332/VPNConnectionChecker.git", .upToNextMajor(from: "0.0.1")),
         .package(url: "https://github.com/min554357332/CacheDataPreprocessor.git", .upToNextMajor(from: "0.0.1")),
-        .package(url: "https://github.com/min554357332/Cache.git", .upToNextMajor(from: "7.4.0")),
-        .package(url: "https://github.com/Alamofire/Alamofire.git", .upToNextMajor(from: "5.10.2")),
-        .package(url: "https://github.com/min554357332/AES_256_CBC.git", .upToNextMajor(from: "0.0.1"))
+        .package(url: "https://github.com/hyperoslo/Cache.git", from: "7.4.0"),
     ],
     targets: [
         .target(
@@ -42,15 +42,15 @@ let package = Package(
         .testTarget(
             name: "XCBusinessTests",
             dependencies: [
-                "XCBusiness",
-                "XCNetwork",
-                "XCKeychain",
-                "XCCache",
-                "VPNConnectionChecker",
-                "CacheDataPreprocessor",
-                "Cache",
-                "Alamofire",
-                "AES_256_CBC"
+//                "XCBusiness",
+//                "XCNetwork",
+//                "XCKeychain",
+//                "XCCache",
+//                "VPNConnectionChecker",
+//                "CacheDataPreprocessor",
+//                "Cache",
+//                "Alamofire",
+//                "AES_256_CBC"
             ]
         ),
     ],
