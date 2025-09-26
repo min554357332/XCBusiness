@@ -1,5 +1,5 @@
 {
-  "originHash" : "e152aba057d35978c412e3688cc535bd64d56ebf1d04b0fe1addb9723f92f8fe",
+  "originHash" : "357b5c13d86b215c9623aa118b73cee2fddc72815e35a3d35e7ce4a3e0ba3911",
   "pins" : [
     {
       "identity" : "aes_256_cbc",
@@ -69,8 +69,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/min554357332/XCNetwork.git",
       "state" : {
-        "revision" : "8527f21a1e0723fe77722ab1ed5ff154532099db",
-        "version" : "0.0.7"
+        "revision" : "2006db5ecb376437325c440ff10046210e849597",
+        "version" : "0.0.8"
       }
     }
   ],
