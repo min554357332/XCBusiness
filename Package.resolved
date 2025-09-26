@@ -1,0 +1,78 @@
+{
+  "originHash" : "80a1123c9e788b762729ad01cbf19a579cdc3882d6c0dbee7a7a9bc08e6027a2",
+  "pins" : [
+    {
+      "identity" : "aes_256_cbc",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/min554357332/AES_256_CBC.git",
+      "state" : {
+        "revision" : "43e4349ab3b0d98e48ec46c6c2e097648df42cb7",
+        "version" : "0.0.3"
+      }
+    },
+    {
+      "identity" : "alamofire",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Alamofire/Alamofire.git",
+      "state" : {
+        "revision" : "513364f870f6bfc468f9d2ff0a95caccc10044c5",
+        "version" : "5.10.2"
+      }
+    },
+    {
+      "identity" : "cache",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/hyperoslo/Cache.git",
+      "state" : {
+        "revision" : "24e47109e31b2031cb26e25cc1b81b607496066c",
+        "version" : "7.4.0"
+      }
+    },
+    {
+      "identity" : "cachedatapreprocessor",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/min554357332/CacheDataPreprocessor.git",
+      "state" : {
+        "revision" : "dfefda9c57854d3ee643c3392cd699ca1d13808a",
+        "version" : "0.0.1"
+      }
+    },
+    {
+      "identity" : "vpnconnectionchecker",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/min554357332/VPNConnectionChecker.git",
+      "state" : {
+        "revision" : "9604d93479ac8f91f4368732e1124d5361e4ba79",
+        "version" : "0.0.3"
+      }
+    },
+    {
+      "identity" : "xccache",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/min554357332/XCCache.git",
+      "state" : {
+        "revision" : "96eae0e23d9c09936e838e4499e03964b1c03985",
+        "version" : "0.0.12"
+      }
+    },
+    {
+      "identity" : "xckeychain",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/min554357332/XCKeychain.git",
+      "state" : {
+        "revision" : "1b3343be60463e0f8388404c907adcc57df64436",
+        "version" : "0.0.3"
+      }
+    },
+    {
+      "identity" : "xcnetwork",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/min554357332/XCNetwork.git",
+      "state" : {
+        "revision" : "ae592b5aec66444537a9fbc009a3b2069049a8fb",
+        "version" : "0.0.6"
+      }
+    }
+  ],
+  "version" : 3
+}
