@@ -53,5 +53,6 @@ let package = Package(
                 "AES_256_CBC"
             ]
         ),
-    ]
+    ],
+    swiftLanguageModes: [.version("6.2")]
 )
