@@ -42,17 +42,16 @@ let package = Package(
         .testTarget(
             name: "XCBusinessTests",
             dependencies: [
-//                "XCBusiness",
-//                "XCNetwork",
-//                "XCKeychain",
-//                "XCCache",
-//                "VPNConnectionChecker",
-//                "CacheDataPreprocessor",
-//                "Cache",
-//                "Alamofire",
-//                "AES_256_CBC"
+                "XCBusiness",
+                "XCNetwork",
+                "XCKeychain",
+                "XCCache",
+                "VPNConnectionChecker",
+                "CacheDataPreprocessor",
+                "Cache",
+                "Alamofire",
+                "AES_256_CBC"
             ]
         ),
     ],
-    swiftLanguageModes: [.version("6.1")]
 )
