@@ -1,10 +1,9 @@
 import Foundation
 import XCNetwork
 
-public actor HostRequestWork: @preconcurrency XCWork {
-    
-    public let key = "host"
-    internal var task: Task<Host_response, Error>?
+public actor CitysRequestWork: @preconcurrency XCWork {
+    public let key = "citys"
+    internal var task: Task<[Citys_response], Error>?
     private var retryCount = 0
     
     public init() {}
@@ -16,7 +15,7 @@ public actor HostRequestWork: @preconcurrency XCWork {
             }
         }
         let task = Task.detached {
-            try await HostRequest.fire()
+            try await Citys_request.fire()
         }
         self.task = task
         if self.retryCount == 0 {
@@ -25,7 +24,7 @@ public actor HostRequestWork: @preconcurrency XCWork {
         do {
             let result = try await task.value
             await self.shotdown()
-            return [result as Sendable & Codable]
+            return result as [Sendable & Codable]
         } catch {
             self.retryCount += 1
             if self.retryCount <= 3 {
@@ -43,3 +42,11 @@ public actor HostRequestWork: @preconcurrency XCWork {
     }
 }
 
+
+public extension CitysRequestWork {
+    static func fire() async throws -> [Citys_response] {
+        let work = CitysRequestWork()
+        await XCBusiness.share.addWork(work)
+        return try await XCBusiness.share.run(work.key, returnType: Citys_response.self)
+    }
+}

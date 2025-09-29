@@ -1,15 +1,13 @@
 import Foundation
 import XCNetwork
 
-public actor NodeRequestWork: @preconcurrency XCWork {
-    public let key = "nodes"
-    internal var task: Task<[Node_response], Error>?
-    private var retryCount = 1
-    let city_id: Int
+public actor GlobalConfigRequestWork: @preconcurrency XCWork {
     
-    public init(city_id: Int) {
-        self.city_id = city_id
-    }
+    public let key = "global_config"
+    internal var task: Task<Global_config_response, Error>?
+    private var retryCount = 0
+    
+    public init() {}
     
     public func run() async throws -> [Sendable & Codable] {
         if self.retryCount == 0 {
@@ -18,7 +16,7 @@ public actor NodeRequestWork: @preconcurrency XCWork {
             }
         }
         let task = Task.detached {
-            try await Node_request.fire(self.city_id)
+            try await Global_config_request.fire()
         }
         self.task = task
         if self.retryCount == 0 {
@@ -27,7 +25,7 @@ public actor NodeRequestWork: @preconcurrency XCWork {
         do {
             let result = try await task.value
             await self.shotdown()
-            return result as [Sendable & Codable]
+            return [result as Sendable & Codable]
         } catch {
             self.retryCount += 1
             if self.retryCount <= 3 {
@@ -42,5 +40,15 @@ public actor NodeRequestWork: @preconcurrency XCWork {
         self.task?.cancel()
         self.task = nil
         await XCBusiness.share.rmWork(self.key)
+    }
+}
+
+public extension GlobalConfigRequestWork {
+    static func fire() async throws -> Global_config_response {
+        let work = GlobalConfigRequestWork()
+        await XCBusiness.share.addWork(work)
+        let result = try await XCBusiness.share.run(work.key, returnType: Global_config_response.self)
+        guard let first = result.first else { throw NSError(domain: "err", code: -1) }
+        return first
     }
 }

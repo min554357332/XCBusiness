@@ -61,3 +61,18 @@ public actor ReportRequestWork: @preconcurrency XCWork {
         await XCBusiness.share.rmWork(self.key)
     }
 }
+
+public extension ReportRequestWork {
+    static func fire(
+        name: String,
+        retry: Int,
+        core: String,
+        agreement: String,
+        event: String,
+        duration: Int? = nil
+    ) async throws {
+        let report_work = ReportRequestWork(name: name, retry: retry, core: core, agreement: agreement, event: event)
+        await XCBusiness.share.addWork(report_work)
+        let _:[Node_response] = try await XCBusiness.share.run(report_work.key, returnType: nil)
+    }
+}

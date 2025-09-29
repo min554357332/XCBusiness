@@ -8,6 +8,13 @@ public actor XCBusiness {
     
     internal var works: [String: any XCWork] = [:]
     public var response: [String: [Sendable & Codable]] = [:]
+    public var productIds: Set<String> = []
+}
+
+extension XCBusiness {
+    public func set_productIds(_ ids: Set<String>) async {
+        self.productIds = ids
+    }
 }
 
 extension XCBusiness {

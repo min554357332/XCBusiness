@@ -24,6 +24,8 @@ let package = Package(
         .package(url: "https://github.com/min554357332/VPNConnectionChecker.git", .upToNextMajor(from: "0.0.1")),
         .package(url: "https://github.com/min554357332/CacheDataPreprocessor.git", .upToNextMajor(from: "0.0.1")),
         .package(url: "https://github.com/hyperoslo/Cache.git", from: "7.4.0"),
+        .package(url: "https://github.com/min554357332/XCTunnelManager.git", .upToNextMajor(from: "0.0.1")),
+        .package(url: "https://github.com/min554357332/XCBuy.git", .upToNextMajor(from: "0.0.1")),
     ],
     targets: [
         .target(
@@ -36,7 +38,9 @@ let package = Package(
                 "CacheDataPreprocessor",
                 "Cache",
                 "Alamofire",
-                "AES_256_CBC"
+                "AES_256_CBC",
+                "XCTunnelManager",
+                "XCBuy",
             ]
         ),
         .testTarget(
@@ -50,7 +54,9 @@ let package = Package(
                 "CacheDataPreprocessor",
                 "Cache",
                 "Alamofire",
-                "AES_256_CBC"
+                "AES_256_CBC",
+                "XCTunnelManager",
+                "XCBuy",
             ]
         ),
     ],

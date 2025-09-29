@@ -3,15 +3,25 @@ import XCNetwork
 import VPNConnectionChecker
 
 public actor ConnectSuccess {
-    public static func isSuccess() async -> Bool {
-        for _ in 1 ... 3 {
+    public static func isSuccess(retry: Int = 1) async -> Bool {
+        if await VPNConnectionChecker.checker() {
             let result = await ConnectSuccess._isSuccess()
             if await VPNConnectionChecker.checker() {
                 if result {
                     return true
+                } else {
+                    if await VPNConnectionChecker.checker() {
+                        if retry <= 3 {
+                            return await ConnectSuccess.isSuccess(retry: retry + 1)
+                        } else {
+                            // 重试结束，连接失败
+                            return false
+                        }
+                    } else {
+                        // VPN未连接
+                        return false
+                    }
                 }
-            } else {
-                return false
             }
         }
         return false

@@ -1,10 +1,10 @@
 import Foundation
 import XCNetwork
 
-public actor GlobalConfigRequestWork: @preconcurrency XCWork {
+public actor HostRequestWork: @preconcurrency XCWork {
     
-    public let key = "global_config"
-    internal var task: Task<Global_config_response, Error>?
+    public let key = "host"
+    internal var task: Task<Host_response, Error>?
     private var retryCount = 0
     
     public init() {}
@@ -16,7 +16,7 @@ public actor GlobalConfigRequestWork: @preconcurrency XCWork {
             }
         }
         let task = Task.detached {
-            try await Global_config_request.fire()
+            try await HostRequest.fire()
         }
         self.task = task
         if self.retryCount == 0 {
@@ -43,3 +43,12 @@ public actor GlobalConfigRequestWork: @preconcurrency XCWork {
     }
 }
 
+public extension HostRequestWork {
+    static func fire() async throws -> Host_response {
+        let work = HostRequestWork()
+        await XCBusiness.share.addWork(work)
+        let result = try await XCBusiness.share.run(work.key, returnType: Host_response.self)
+        guard let first = result.first else { throw NSError(domain: "err", code: -1) }
+        return first
+    }
+}

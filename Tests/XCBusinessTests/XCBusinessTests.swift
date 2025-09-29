@@ -25,6 +25,7 @@ func setNetwork() async throws {
     )
     try await XCNetwork.share.setUD(.init(first_install_time: "X/qc0jEzO6OzCNueV3KezSbb7T3pSu/jrQtjr3I/kX0=", last_update_time: "xB2Nh3ACwkmx0Fld9WLk/RYQVrf4Xy6THFTXddlNAXQ="))
     try await XCNetwork.share.setKeyChain(.init(key_uuid: "mnCm0wLU/h33Tk+O445HRz2+T/NzQePrVAYU5FOnzRg="))
+    try await XCNetwork.share.setAppGroups(.init(id: "BiAg8f2bX/ANU8J8Ngd+iZQequSB8dHbXgJ2a5XNrAGDdHRTECik/Ch2Zeld5qHp"))
     await XCNetwork.share.setCache_decrypt_data_preprocessor(.init())
     await XCNetwork.share.setCache_encrypt_data_preprocessor(.init())
     await XCNetwork.share.setNEDataPreprocessor(.init())
@@ -115,4 +116,71 @@ func urls_test() async throws {
     try await setNetwork()
     let result = await ConnectSuccess.isSuccess()
     print(result)
+}
+
+@Test("chose_city")
+func chose_city() async throws {
+    try await setNetwork()
+    let citys_work = CitysRequestWork()
+    await XCBusiness.share.addWork(citys_work)
+    let citys_result = try await XCBusiness.share.run(citys_work.key, returnType: Citys_response.self)
+    guard let city = citys_result.first else {
+        throw NSError.init(domain: "err", code: -1)
+    }
+    
+    let chose_city_work = CityChoseWork(city: city)
+    await XCBusiness.share.addWork(chose_city_work)
+    let _:[Citys_response] = try await XCBusiness.share.run(chose_city_work.key, returnType: nil)
+    print(1)
+}
+
+@Test("chose_node")
+func chose_node() async throws {
+    try await setNetwork()
+    let citys_work = CitysRequestWork()
+    await XCBusiness.share.addWork(citys_work)
+    let citys_result = try await XCBusiness.share.run(citys_work.key, returnType: Citys_response.self)
+    guard let city = citys_result.first else {
+        throw NSError.init(domain: "err", code: -1)
+    }
+    
+    let chose_city_work = CityChoseWork(city: city)
+    await XCBusiness.share.addWork(chose_city_work)
+    let _:[Citys_response] = try await XCBusiness.share.run(chose_city_work.key, returnType: nil)
+    
+    let nodes_work = NodeRequestWork(city_id: city.id)
+    await XCBusiness.share.addWork(nodes_work)
+    let nodes_result = try await XCBusiness.share.run(nodes_work.key, returnType: Node_response.self)
+    guard let node = nodes_result.first else {
+        throw NSError.init(domain: "err", code: -1)
+    }
+    
+    let chose_node_work = NodeChoseWork(node: node)
+    await XCBusiness.share.addWork(chose_node_work)
+    let _:[Node_response] = try await XCBusiness.share.run(chose_node_work.key, returnType: nil)
+    print(1)
+}
+
+@Test("get_city")
+func get_city() async throws {
+    try await setNetwork()
+    let get_city_work = CityGetWork()
+    await XCBusiness.share.addWork(get_city_work)
+    let city_result = try await XCBusiness.share.run(get_city_work.key, returnType: Citys_response.self)
+    guard let city = city_result.first else {
+        throw NSError.init(domain: "err", code: -1)
+    }
+    print(city)
+}
+
+@Test("get_node")
+func get_city() async throws {
+    try await setNetwork()
+    let get_node_work = NodeGetWork()
+    await XCBusiness.share.addWork(get_node_work)
+    let node_result = try await XCBusiness.share.run(get_node_work.key, returnType: Node_response.self)
+    guard let node = node_result.first else {
+        throw NSError.init(domain: "err", code: -1)
+    }
+    print(node)
 }
