@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 import XCNetwork
 import XCCache
 
@@ -9,11 +10,22 @@ public actor XCBusiness {
     internal var works: [String: any XCWork] = [:]
     public var response: [String: [Sendable & Codable]] = [:]
     public var productIds: Set<String> = []
+    
+    private var userSubject = PassthroughSubject<XCUser,Never>()
 }
 
 extension XCBusiness {
     public func set_productIds(_ ids: Set<String>) async {
         self.productIds = ids
+    }
+}
+
+extension XCBusiness {
+    public func userSubject(send user: XCUser) async {
+        self.userSubject.send(user)
+    }
+    public func userSubjectSink() async -> PassthroughSubject<XCUser,Never> {
+        return self.userSubject
     }
 }
 

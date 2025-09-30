@@ -44,6 +44,7 @@ extension UserLoopUpdateWork {
         if self.user.expiry == expiryDate.timeIntervalSince1970 { return }
         self.user.expiry = expiryDate.timeIntervalSince1970
         try await XCNetwork.share.app_groups_decorator.set_user(self.user)
+        await XCBusiness.share.userSubject(send: self.user)
     }
 }
 

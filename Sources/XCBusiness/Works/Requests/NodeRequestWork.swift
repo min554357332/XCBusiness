@@ -7,32 +7,28 @@ public actor NodeRequestWork: @preconcurrency XCWork {
     private var retryCount = 1
     let city_id: Int
     
-    public init(city_id: Int) {
+    public init(
+        city_id: Int,
+        retry: Int
+    ) {
         self.city_id = city_id
+        self.retryCount = retry
     }
     
     public func run() async throws -> [Sendable & Codable] {
-        if self.retryCount == 0 {
-            if let oldTask = await XCBusiness.share.rmWork(self.key) {
-                await oldTask.shotdown()
-            }
+        if let oldTask = await XCBusiness.share.rmWork(self.key) {
+            await oldTask.shotdown()
         }
         let task = Task.detached {
-            try await Node_request.fire(self.city_id)
+            try await Node_request.fire(self.city_id, retry: self.retryCount)
         }
         self.task = task
-        if self.retryCount == 0 {
-            await XCBusiness.share.addWork(self)
-        }
+        await XCBusiness.share.addWork(self)
         do {
             let result = try await task.value
             await self.shotdown()
             return result as [Sendable & Codable]
         } catch {
-            self.retryCount += 1
-            if self.retryCount <= 3 {
-                return try await self.run()
-            }
             await self.shotdown()
             throw error
         }
@@ -46,8 +42,8 @@ public actor NodeRequestWork: @preconcurrency XCWork {
 }
 
 public extension NodeRequestWork {
-    static func fire(city_id: Int) async throws -> [Node_response] {
-        let work = NodeRequestWork(city_id: city_id)
+    static func fire(city_id: Int,retry: Int) async throws -> [Node_response] {
+        let work = NodeRequestWork(city_id: city_id, retry: retry)
         await XCBusiness.share.addWork(work)
         let result = try await XCBusiness.share.run(work.key, returnType: Node_response.self)
         return result
