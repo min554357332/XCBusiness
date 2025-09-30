@@ -225,7 +225,7 @@ extension ConnectWork {
         try await withThrowingTaskGroup(of: Void.self) { group in
             // 添加超时任务
             group.addTask {
-                try await Task.sleep(for: .seconds(30)) // 30秒超时
+                try await Task.sleep(nanoseconds: 30_000_000_000)
                 throw NSError(domain: "VPN connection timeout", code: -2)
             }
             
@@ -268,7 +268,7 @@ extension ConnectWork {
         let result = try await withThrowingTaskGroup(of: Bool.self) { group in
             // 添加超时任务
             group.addTask {
-                try await Task.sleep(for: .seconds(15)) // 15秒超时
+                try await Task.sleep(nanoseconds: 15_000_000_000)
                 throw NSError(domain: "Network test timeout", code: -3)
             }
             
