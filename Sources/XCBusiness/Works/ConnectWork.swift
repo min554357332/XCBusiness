@@ -62,7 +62,6 @@ public actor ConnectWork: @preconcurrency XCWork {
             try await self.fire()
         }
         self.task = task
-        await XCBusiness.share.addWork(self)
         do {
             _ = try await task.value
             await self.shotdown()
@@ -314,5 +313,13 @@ extension ConnectWork {
     func faile(context: ConnectContext) async throws {
         await XCTunnelManager.share.setStatus(.realFaile)
         try await XCTunnelManager.share.stop()
+    }
+}
+
+extension ConnectWork {
+    public static func fire(_ city: Citys_response?) {
+        let work = ConnectWork(city)
+        await XCBusiness.share.addWork(work)
+        let _: [Citys_response] = try await XCBusiness.share.run(work.key, returnType: nil)
     }
 }
