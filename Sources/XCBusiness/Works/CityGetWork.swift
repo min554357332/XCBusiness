@@ -3,7 +3,7 @@ import XCNetwork
 
 public actor CityGetWork: @preconcurrency XCWork {
     public let key: String = "city_get"
-    internal var task: Task<[Citys_response?], Error>?
+    internal var task: Task<[Citys_response]?, Error>?
     
     public init() {}
     
@@ -12,14 +12,16 @@ public actor CityGetWork: @preconcurrency XCWork {
             await oldTask.shotdown()
         }
         let task = Task.detached {
-            let result = try await self.fire()
-            return [result]
+            try await self.fire()
         }
         self.task = task
         do {
             let result = try await task.value
             await self.shotdown()
-            return result as [Sendable & Codable]
+            if let result = result {
+                return result as [Sendable & Codable]
+            }
+            return []
         } catch {
             await self.shotdown()
             throw error
@@ -35,8 +37,11 @@ public actor CityGetWork: @preconcurrency XCWork {
 }
 
 extension CityGetWork {
-    func fire() async throws -> Citys_response? {
-        try await XCNetwork.share.app_groups_decorator.get_chose_city()
+    func fire() async throws -> [Citys_response]? {
+        if let result = try await XCNetwork.share.app_groups_decorator.get_chose_city() {
+            return [result]
+        }
+        return nil
     }
 }
 
