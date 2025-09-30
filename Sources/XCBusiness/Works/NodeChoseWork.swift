@@ -20,7 +20,6 @@ public actor NodeChoseWork: @preconcurrency XCWork {
             try await self.fire()
         }
         self.task = task
-        await XCBusiness.share.addWork(self)
         do {
             try await task.value
             await self.shotdown()

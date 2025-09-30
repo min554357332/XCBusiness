@@ -23,7 +23,6 @@ public actor NodeRequestWork: @preconcurrency XCWork {
             try await Node_request.fire(self.city_id, retry: self.retryCount)
         }
         self.task = task
-        await XCBusiness.share.addWork(self)
         do {
             let result = try await task.value
             await self.shotdown()

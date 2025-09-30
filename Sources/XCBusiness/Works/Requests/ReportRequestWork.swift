@@ -38,9 +38,6 @@ public actor ReportRequestWork: @preconcurrency XCWork {
             try await Report_request.fire(name: self.name, retry: self.retry, core: self.core, agreement: self.agreement, event: self.event, duration: self.duration)
         }
         self.task = task
-        if self.retryCount == 0 {
-            await XCBusiness.share.addWork(self)
-        }
         do {
             _ = try await task.value
             await self.shotdown()

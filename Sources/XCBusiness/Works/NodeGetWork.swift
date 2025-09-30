@@ -16,7 +16,6 @@ public actor NodeGetWork: @preconcurrency XCWork {
             return [result]
         }
         self.task = task
-        await XCBusiness.share.addWork(self)
         do {
             let result = try await task.value
             await self.shotdown()

@@ -19,9 +19,6 @@ public actor IpconfigRequestWork: @preconcurrency XCWork {
             try await IPConfiguration.fire()
         }
         self.task = task
-        if self.retryCount == 0 {
-            await XCBusiness.share.addWork(self)
-        }
         do {
             let result = try await task.value
             await self.shotdown()

@@ -18,7 +18,6 @@ public actor URLTestWork: @preconcurrency XCWork {
         if let oldTask = await XCBusiness.share.rmWork(self.key) {
             await oldTask.shotdown()
         }
-        await XCBusiness.share.addWork(self)
         let task = Task {
             try await self.fire()
         }

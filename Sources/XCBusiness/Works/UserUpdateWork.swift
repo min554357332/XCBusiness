@@ -16,7 +16,6 @@ public actor UserUpdateWork: @preconcurrency XCWork {
             try await self.fire()
         }
         self.task = task
-        await XCBusiness.share.addWork(self)
         do {
             _ = try await task.value
             await self.shotdown()

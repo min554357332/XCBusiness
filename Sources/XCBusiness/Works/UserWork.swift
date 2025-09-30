@@ -14,7 +14,6 @@ public actor UserWork: @preconcurrency XCWork {
             await self.fire()
         }
         self.task = task
-        await XCBusiness.share.addWork(self)
         let result = await task.value
         await self.shotdown()
         return [result] as [Sendable & Codable]

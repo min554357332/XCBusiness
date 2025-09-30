@@ -19,7 +19,6 @@ public actor UserLoopUpdateWork: @preconcurrency XCWork {
             }
         }
         self.task = task
-        await XCBusiness.share.addWork(self)
         do {
             _ = try await task.value
             await self.shotdown()
