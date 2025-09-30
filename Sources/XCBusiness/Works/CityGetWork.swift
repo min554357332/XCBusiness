@@ -16,7 +16,6 @@ public actor CityGetWork: @preconcurrency XCWork {
             return [result]
         }
         self.task = task
-        await XCBusiness.share.addWork(self)
         do {
             let result = try await task.value
             await self.shotdown()
@@ -38,5 +37,14 @@ public actor CityGetWork: @preconcurrency XCWork {
 extension CityGetWork {
     func fire() async throws -> Citys_response? {
         try await XCNetwork.share.app_groups_decorator.get_chose_city()
+    }
+}
+
+extension CityGetWork {
+    public static func fire() async throws -> Citys_response? {
+        let work = CityGetWork()
+        await XCBusiness.share.addWork(work)
+        let result = try await XCBusiness.share.run(work.key, returnType: Citys_response.self)
+        return result.first
     }
 }
