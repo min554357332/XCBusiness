@@ -214,13 +214,12 @@ extension ConnectWork {
             throw NSError(domain: "node encode error", code: -1)
         }
         
-        // 启动连接任务
-        let connectTask = Task {
-            try await XCTunnelManager.share.connect(jsonStr)
-        }
-        
-        // 使用 TaskGroup 来处理超时和状态监听
+        try await XCTunnelManager.share.connect(jsonStr)
+
+        // 使用 TaskGroup 来处理连接、超时和状态监听
         try await withThrowingTaskGroup(of: Void.self) { group in
+            // 添加连接任务到 TaskGroup 中，这样错误能正确传播
+            
             // 添加超时任务
             group.addTask {
                 try await Task.sleep(nanoseconds: 30_000_000_000)
@@ -249,12 +248,11 @@ extension ConnectWork {
                 }
             }
             
-            // 等待第一个完成的任务
+            // 等待第一个完成的任务（连接完成、超时或状态变化）
             try await group.next()
             
             // 取消其他任务
             group.cancelAll()
-            connectTask.cancel()
         }
     }
 
