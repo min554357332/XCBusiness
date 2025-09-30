@@ -317,7 +317,7 @@ extension ConnectWork {
 }
 
 extension ConnectWork {
-    public static func fire(_ city: Citys_response?) {
+    public static func fire(_ city: Citys_response?) async throws {
         let work = ConnectWork(city)
         await XCBusiness.share.addWork(work)
         let _: [Citys_response] = try await XCBusiness.share.run(work.key, returnType: nil)
