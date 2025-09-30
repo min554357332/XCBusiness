@@ -51,21 +51,9 @@ private extension NodeGetGithubWork {
 
 public extension NodeGetGithubWork {
     static func fire() async throws -> [Node_response] {
-        let ipconfig_work_1 = IpconfigRequestWork("ip_config_1")
-        let ipconfig_work_2 = IpconfigRequestWork("ip_config_1")
-        let ipconfig_work_1_result = try? await XCBusiness.share.run(ipconfig_work_1, returnType: Ip_api_response.self)
-        let ipconfig_work_2_result = try? await XCBusiness.share.run(ipconfig_work_2, returnType: Ip_info_response.self)
-        let countryCode: String? = if let ip_1 = ipconfig_work_1_result?.first {
-            ip_1.ipcountry
-        } else if let ip_2 = ipconfig_work_2_result?.first {
-            ip_2.ipcountry
-        } else {
-            if #available(iOS 16, *) {
-                Locale.current.region?.identifier ?? "US"
-            } else {
-                Locale.current.regionCode ?? "US"
-            }
-        }
+        
+        let ipconfig = try await IpconfigRequestWork.fire()
+        let countryCode = ipconfig.ipcountry
         
         let work_1 = NodeGetGithubWork(countryCode: nil)
         let work_2 = NodeGetGithubWork(countryCode: countryCode)

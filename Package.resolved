@@ -87,8 +87,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/min554357332/XCNetwork.git",
       "state" : {
-        "revision" : "7ebd8415b308f4ddb39714d6998b5ef3d23a730d",
-        "version" : "0.1.9"
+        "revision" : "bf9c907f4427c4e6411d02e07d5e776e0dc1ee8d",
+        "version" : "0.1.11"
       }
     },
     {
