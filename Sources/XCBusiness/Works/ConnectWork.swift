@@ -238,8 +238,8 @@ extension ConnectWork {
                         try await self.setStatus(.test_network(context: context))
                         return
                     case .disconnected, .disconnecting:
-                        try await self.setStatus(.faile(context: context))
-                        return
+//                        try await self.setStatus(.faile(context: context))
+                        continue
                     case .connecting:
                         continue
                     default:
