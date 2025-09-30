@@ -43,8 +43,7 @@ public actor HostRequestWork: @preconcurrency XCWork {
 public extension HostRequestWork {
     static func fire() async throws -> Host_response {
         let work = HostRequestWork()
-        await XCBusiness.share.addWork(work)
-        let result = try await XCBusiness.share.run(work.key, returnType: Host_response.self)
+        let result = try await XCBusiness.share.run(work, returnType: Host_response.self)
         guard let first = result.first else { throw NSError(domain: "err", code: -1) }
         return first
     }

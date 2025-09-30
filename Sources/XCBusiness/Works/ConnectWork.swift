@@ -137,8 +137,7 @@ extension ConnectWork {
             }
         }
         let chose_city_work = CityChoseWork(city: city)
-        await XCBusiness.share.addWork(chose_city_work)
-        let _:[Citys_response] = try await XCBusiness.share.run(chose_city_work.key, returnType: nil)
+        let _:[Citys_response] = try await XCBusiness.share.run(chose_city_work, returnType: nil)
         try await self.setStatus(.fetchNode(
             context: .init(nodes: [],city: city, node: nil, retry: 1, node_index: 0)
         ))
@@ -319,7 +318,6 @@ extension ConnectWork {
 extension ConnectWork {
     public static func fire(_ city: Citys_response?) async throws {
         let work = ConnectWork(city)
-        await XCBusiness.share.addWork(work)
-        let _: [Citys_response] = try await XCBusiness.share.run(work.key, returnType: nil)
+        let _: [Citys_response] = try await XCBusiness.share.run(work, returnType: nil)
     }
 }

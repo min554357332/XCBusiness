@@ -50,7 +50,6 @@ extension UserLoopUpdateWork {
 public extension UserLoopUpdateWork {
     static func fire() async throws {
         let work = UserLoopUpdateWork()
-        await XCBusiness.share.addWork(work)
-        let _:[XCUser] = try await XCBusiness.share.run(work.key, returnType: nil)
+        let _:[XCUser] = try await XCBusiness.share.run(work, returnType: nil)
     }
 }

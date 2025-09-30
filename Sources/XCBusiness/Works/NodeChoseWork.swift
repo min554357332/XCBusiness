@@ -47,7 +47,6 @@ private extension NodeChoseWork {
 public extension NodeChoseWork {
     public static func fire(_ node: Node_response) async throws {
         let chose_node_work = NodeChoseWork(node: node)
-        await XCBusiness.share.addWork(chose_node_work)
-        let _:[Node_response] = try await XCBusiness.share.run(chose_node_work.key, returnType: nil)
+        let _:[Node_response] = try await XCBusiness.share.run(chose_node_work, returnType: nil)
     }
 }

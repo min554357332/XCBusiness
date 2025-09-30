@@ -51,12 +51,10 @@ private extension NodeGetGithubWork {
 
 public extension NodeGetGithubWork {
     static func fire() async throws -> [Node_response] {
-        let ipconfig_work_1 = IpconfigRequestWork()
-        let ipconfig_work_2 = IpconfigRequestWork()
-        await XCBusiness.share.addWork(ipconfig_work_1)
-        await XCBusiness.share.addWork(ipconfig_work_2)
-        let ipconfig_work_1_result = try? await XCBusiness.share.run(ipconfig_work_1.key, returnType: Ip_api_response.self)
-        let ipconfig_work_2_result = try? await XCBusiness.share.run(ipconfig_work_2.key, returnType: Ip_info_response.self)
+        let ipconfig_work_1 = IpconfigRequestWork("ip_config_1")
+        let ipconfig_work_2 = IpconfigRequestWork("ip_config_1")
+        let ipconfig_work_1_result = try? await XCBusiness.share.run(ipconfig_work_1, returnType: Ip_api_response.self)
+        let ipconfig_work_2_result = try? await XCBusiness.share.run(ipconfig_work_2, returnType: Ip_info_response.self)
         let countryCode: String? = if let ip_1 = ipconfig_work_1_result?.first {
             ip_1.ipcountry
         } else if let ip_2 = ipconfig_work_2_result?.first {
@@ -72,11 +70,9 @@ public extension NodeGetGithubWork {
         let work_1 = NodeGetGithubWork(countryCode: nil)
         let work_2 = NodeGetGithubWork(countryCode: countryCode)
         
-        await XCBusiness.share.addWork(work_1)
-        await XCBusiness.share.addWork(work_2)
         
-        let work_1_result = try await XCBusiness.share.run(work_1.key, returnType: Node_response.self)
-        let work_2_result = try await XCBusiness.share.run(work_2.key, returnType: Node_response.self)
+        let work_1_result = try await XCBusiness.share.run(work_1, returnType: Node_response.self)
+        let work_2_result = try await XCBusiness.share.run(work_2, returnType: Node_response.self)
         if work_2_result.isEmpty {
             return work_1_result
         }

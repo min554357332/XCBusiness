@@ -29,8 +29,7 @@ public actor ConnectSuccess {
     
     private static func _isSuccess() async -> Bool {
         let global_config_work = GlobalConfigRequestWork()
-        await XCBusiness.share.addWork(global_config_work)
-        let global_config_result = try? await XCBusiness.share.run(global_config_work.key, returnType: Global_config_response.self)
+        let global_config_result = try? await XCBusiness.share.run(global_config_work, returnType: Global_config_response.self)
         guard let global_config_result_first = global_config_result?.first else {
             return false
         }
@@ -73,9 +72,8 @@ public actor ConnectSuccess {
     
     public static func test(_ url: String) async -> Bool {
         let work = URLTestWork(url: url)
-        await XCBusiness.share.addWork(work)
         do {
-            let _:[Node_response] = try await XCBusiness.share.run(work.key, returnType: nil)
+            let _:[Node_response] = try await XCBusiness.share.run(work, returnType: nil)
             print("true === \(url)")
             return true
         } catch {

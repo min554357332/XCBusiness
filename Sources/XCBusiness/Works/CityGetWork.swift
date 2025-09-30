@@ -43,8 +43,7 @@ extension CityGetWork {
 extension CityGetWork {
     public static func fire() async throws -> Citys_response? {
         let work = CityGetWork()
-        await XCBusiness.share.addWork(work)
-        let result = try await XCBusiness.share.run(work.key, returnType: Citys_response.self)
+        let result = try await XCBusiness.share.run(work, returnType: Citys_response.self)
         return result.first
     }
 }

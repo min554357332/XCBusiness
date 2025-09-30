@@ -43,8 +43,7 @@ public actor GlobalConfigRequestWork: @preconcurrency XCWork {
 public extension GlobalConfigRequestWork {
     static func fire() async throws -> Global_config_response {
         let work = GlobalConfigRequestWork()
-        await XCBusiness.share.addWork(work)
-        let result = try await XCBusiness.share.run(work.key, returnType: Global_config_response.self)
+        let result = try await XCBusiness.share.run(work, returnType: Global_config_response.self)
         guard let first = result.first else { throw NSError(domain: "err", code: -1) }
         return first
     }

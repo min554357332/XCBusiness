@@ -45,8 +45,7 @@ extension UserWork {
 public extension UserWork {
     static func fire() async throws -> XCUser {
         let work = UserWork()
-        await XCBusiness.share.addWork(work)
-        let result:[XCUser] = try await XCBusiness.share.run(work.key, returnType: XCUser.self)
+        let result:[XCUser] = try await XCBusiness.share.run(work, returnType: XCUser.self)
         return result.first ?? .init(expiry: 0)
     }
 }

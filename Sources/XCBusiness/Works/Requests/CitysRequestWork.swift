@@ -43,7 +43,6 @@ public actor CitysRequestWork: @preconcurrency XCWork {
 public extension CitysRequestWork {
     static func fire() async throws -> [Citys_response] {
         let work = CitysRequestWork()
-        await XCBusiness.share.addWork(work)
-        return try await XCBusiness.share.run(work.key, returnType: Citys_response.self)
+        return try await XCBusiness.share.run(work, returnType: Citys_response.self)
     }
 }

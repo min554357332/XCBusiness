@@ -43,8 +43,7 @@ public actor NodeRequestWork: @preconcurrency XCWork {
 public extension NodeRequestWork {
     static func fire(city_id: Int,retry: Int) async throws -> [Node_response] {
         let work = NodeRequestWork(city_id: city_id, retry: retry)
-        await XCBusiness.share.addWork(work)
-        let result = try await XCBusiness.share.run(work.key, returnType: Node_response.self)
+        let result = try await XCBusiness.share.run(work, returnType: Node_response.self)
         return result
     }
 }

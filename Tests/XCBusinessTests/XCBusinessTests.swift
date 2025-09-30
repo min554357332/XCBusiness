@@ -36,7 +36,7 @@ func setNetwork() async throws {
 func host() async throws {
     try await setNetwork()
     let work = HostRequestWork()
-    await XCBusiness.share.addWork(work)
+    await XCBusiness. work)
     let result = try await XCBusiness.share.run(work.key, returnType: Host_response.self)
     print(result)
 }
@@ -45,7 +45,7 @@ func host() async throws {
 func citys() async throws {
     try await setNetwork()
     let work = CitysRequestWork()
-    await XCBusiness.share.addWork(work)
+    await XCBusiness. work)
     let result = try await XCBusiness.share.run(work.key, returnType: Citys_response.self)
     print(result)
 }
@@ -54,7 +54,7 @@ func citys() async throws {
 func global_config() async throws {
     try await setNetwork()
     let work = GlobalConfigRequestWork()
-    await XCBusiness.share.addWork(work)
+    await XCBusiness. work)
     let result = try await XCBusiness.share.run(work.key, returnType: Global_config_response.self)
     print(result)
 }
@@ -63,7 +63,7 @@ func global_config() async throws {
 func ipconfig() async throws {
     try await setNetwork()
     let work = IpconfigRequestWork()
-    await XCBusiness.share.addWork(work)
+    await XCBusiness. work)
     let result_1 = try? await XCBusiness.share.run(work.key, returnType: Ip_api_response.self)
     let result_2 = try? await XCBusiness.share.run(work.key, returnType: Ip_info_response.self)
     if (result_1?.isEmpty ?? true) == true && (result_2?.isEmpty ?? true) == true {
@@ -76,13 +76,13 @@ func ipconfig() async throws {
 func nodes() async throws {
     try await setNetwork()
     let citys_work = CitysRequestWork()
-    await XCBusiness.share.addWork(citys_work)
+    await XCBusiness. citys_work)
     let citys_result = try await XCBusiness.share.run(citys_work.key, returnType: Citys_response.self)
     guard let city_id = citys_result.first?.id else {
         throw NSError.init(domain: "err", code: -1)
     }
     let work = NodeRequestWork(city_id: city_id)
-    await XCBusiness.share.addWork(work)
+    await XCBusiness. work)
     let result = try await XCBusiness.share.run(work.key, returnType: Node_response.self)
     print(result)
 }
@@ -92,21 +92,21 @@ func report() async throws {
     try await setNetwork()
     
     let citys_work = CitysRequestWork()
-    await XCBusiness.share.addWork(citys_work)
+    await XCBusiness. citys_work)
     let citys_result = try await XCBusiness.share.run(citys_work.key, returnType: Citys_response.self)
     guard let city_id = citys_result.first?.id else {
         throw NSError.init(domain: "err", code: -1)
     }
     
     let node_work = NodeRequestWork(city_id: city_id)
-    await XCBusiness.share.addWork(node_work)
+    await XCBusiness. node_work)
     let node_result = try await XCBusiness.share.run(node_work.key, returnType: Node_response.self)
     guard let node = node_result.first else {
         throw NSError.init(domain: "err", code: -1)
     }
     
     let report_work = ReportRequestWork(name: node.name, retry: 0, core: node.core, agreement: node.agreement, event: "connect")
-    await XCBusiness.share.addWork(report_work)
+    await XCBusiness. report_work)
     let _:[Node_response] = try await XCBusiness.share.run(report_work.key, returnType: nil)
     print(1)
 }
@@ -122,14 +122,14 @@ func urls_test() async throws {
 func chose_city() async throws {
     try await setNetwork()
     let citys_work = CitysRequestWork()
-    await XCBusiness.share.addWork(citys_work)
+    await XCBusiness. citys_work)
     let citys_result = try await XCBusiness.share.run(citys_work.key, returnType: Citys_response.self)
     guard let city = citys_result.first else {
         throw NSError.init(domain: "err", code: -1)
     }
     
     let chose_city_work = CityChoseWork(city: city)
-    await XCBusiness.share.addWork(chose_city_work)
+    await XCBusiness. chose_city_work)
     let _:[Citys_response] = try await XCBusiness.share.run(chose_city_work.key, returnType: nil)
     print(1)
 }
@@ -138,25 +138,25 @@ func chose_city() async throws {
 func chose_node() async throws {
     try await setNetwork()
     let citys_work = CitysRequestWork()
-    await XCBusiness.share.addWork(citys_work)
+    await XCBusiness. citys_work)
     let citys_result = try await XCBusiness.share.run(citys_work.key, returnType: Citys_response.self)
     guard let city = citys_result.first else {
         throw NSError.init(domain: "err", code: -1)
     }
     
     let chose_city_work = CityChoseWork(city: city)
-    await XCBusiness.share.addWork(chose_city_work)
+    await XCBusiness. chose_city_work)
     let _:[Citys_response] = try await XCBusiness.share.run(chose_city_work.key, returnType: nil)
     
     let nodes_work = NodeRequestWork(city_id: city.id)
-    await XCBusiness.share.addWork(nodes_work)
+    await XCBusiness. nodes_work)
     let nodes_result = try await XCBusiness.share.run(nodes_work.key, returnType: Node_response.self)
     guard let node = nodes_result.first else {
         throw NSError.init(domain: "err", code: -1)
     }
     
     let chose_node_work = NodeChoseWork(node: node)
-    await XCBusiness.share.addWork(chose_node_work)
+    await XCBusiness. chose_node_work)
     let _:[Node_response] = try await XCBusiness.share.run(chose_node_work.key, returnType: nil)
     print(1)
 }
@@ -165,7 +165,7 @@ func chose_node() async throws {
 func get_city() async throws {
     try await setNetwork()
     let get_city_work = CityGetWork()
-    await XCBusiness.share.addWork(get_city_work)
+    await XCBusiness. get_city_work)
     let city_result = try await XCBusiness.share.run(get_city_work.key, returnType: Citys_response.self)
     guard let city = city_result.first else {
         throw NSError.init(domain: "err", code: -1)
@@ -177,7 +177,7 @@ func get_city() async throws {
 func get_city() async throws {
     try await setNetwork()
     let get_node_work = NodeGetWork()
-    await XCBusiness.share.addWork(get_node_work)
+    await XCBusiness. get_node_work)
     let node_result = try await XCBusiness.share.run(get_node_work.key, returnType: Node_response.self)
     guard let node = node_result.first else {
         throw NSError.init(domain: "err", code: -1)
