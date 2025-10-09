@@ -45,6 +45,9 @@ public actor ConnectSuccess {
             let count = test_urls.count
             for test_url in test_urls {
                 group.addTask {
+                    if Task.isCancelled {
+                        return false
+                    }
                     return await ConnectSuccess.test(test_url)
                 }
             }
