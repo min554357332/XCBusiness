@@ -41,7 +41,10 @@ public actor URLTestWork: @preconcurrency XCWork {
 
 private extension URLTestWork {
     func fire() async throws {
-        let request = AF.request(self.url)
+        let request = AF.request(self.url) { req in
+            req.timeoutInterval = 10
+            req.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
+        }
         let task = request.serializingData()
         let response = await task.response
         if response.response?.statusCode == nil {
