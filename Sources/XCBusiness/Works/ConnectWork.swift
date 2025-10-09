@@ -282,7 +282,7 @@ extension ConnectWork {
 
         // 使用 TaskGroup 来处理连接、超时和状态监听
         try await withThrowingTaskGroup(of: Void.self) { group in
-            group.add {
+            group.addTask {
                 print("🔗 ConnectWork: Initiating tunnel connection...")
                 try await XCTunnelManager.share.connect(jsonStr)
             }
