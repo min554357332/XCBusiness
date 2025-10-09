@@ -96,8 +96,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/min554357332/XCTunnelManager.git",
       "state" : {
-        "revision" : "7a92ac46b2622ecea1c1c21459bbacecc158190a",
-        "version" : "0.0.5"
+        "revision" : "dfb26a90af1ca2ab80ba89cd7ddf4520d5b2bdf9",
+        "version" : "0.0.6"
       }
     }
   ],
