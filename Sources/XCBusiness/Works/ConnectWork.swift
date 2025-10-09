@@ -149,7 +149,7 @@ extension ConnectWork {
         
         let city: Citys_response
         if let c = self.city {
-            print("📍 ConnectWork: Using provided city: \(c.name)")
+            print("📍 ConnectWork: Using provided city: \(c.city)")
             city = c
         } else {
             print("📍 ConnectWork: Fetching available cities...")
@@ -163,19 +163,19 @@ extension ConnectWork {
                     print("❌ ConnectWork: No VIP city available")
                     throw NSError.init(domain: "No VIP city", code: -1)
                 }
-                print("📍 ConnectWork: Selected VIP city: \(c.name)")
+                print("📍 ConnectWork: Selected VIP city: \(c.city)")
                 city = c
             } else {
                 guard let c = citys_result.first(where: { $0.premium == false }) else {
                     print("❌ ConnectWork: No free city available")
                     throw NSError.init(domain: "No available city", code: -1)
                 }
-                print("📍 ConnectWork: Selected free city: \(c.name)")
+                print("📍 ConnectWork: Selected free city: \(c.city)")
                 city = c
             }
         }
         
-        print("📍 ConnectWork: Choosing city: \(city.name)")
+        print("📍 ConnectWork: Choosing city: \(city.city)")
         let chose_city_work = CityChoseWork(city: city)
         let _:[Citys_response] = try await XCBusiness.share.run(chose_city_work, returnType: nil)
         
@@ -188,7 +188,7 @@ extension ConnectWork {
         // 检查任务是否被取消
         try Task.checkCancellation()
         
-        print("🌐 ConnectWork: Fetching nodes for city: \(context.city.name), retry: \(context.retry)")
+        print("🌐 ConnectWork: Fetching nodes for city: \(context.city.city), retry: \(context.retry)")
         
         let nodes_result = try await NodeRequestWork.fire(
             city_id: context.city.id,
@@ -376,7 +376,7 @@ extension ConnectWork {
     public static func fire(_ city: Citys_response?) async throws {
         print("🔥 ConnectWork: Static fire method called")
         if let city = city {
-            print("🔥 ConnectWork: Using specified city: \(city.name)")
+            print("🔥 ConnectWork: Using specified city: \(city.city)")
         } else {
             print("🔥 ConnectWork: No city specified, will auto-select")
         }
