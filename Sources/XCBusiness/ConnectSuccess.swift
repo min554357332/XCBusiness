@@ -39,7 +39,7 @@ public actor ConnectSuccess {
         let test_urls = global_config_result_first.test_urls ?? []
         
         
-        let result: Bool = await withTaskGroup { group in
+        let result: Bool = await withTaskGroup(of: Bool.self) { group in
             var success_count = 0
             var failed_count = 0
             let count = test_urls.count
