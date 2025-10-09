@@ -278,12 +278,15 @@ extension ConnectWork {
             throw NSError(domain: "node encode error", code: -1)
         }
         
-        print("🔗 ConnectWork: Initiating tunnel connection...")
-        try await XCTunnelManager.share.connect(jsonStr)
+
 
         // 使用 TaskGroup 来处理连接、超时和状态监听
         try await withThrowingTaskGroup(of: Void.self) { group in
-            
+            group.add {
+                print("🔗 ConnectWork: Initiating tunnel connection...")
+                try await XCTunnelManager.share.connect(jsonStr)
+            }
+
             // 添加状态监听任务
             group.addTask {
                 print("👂 ConnectWork: Starting VPN status monitoring...")
@@ -321,10 +324,20 @@ extension ConnectWork {
         try Task.checkCancellation()
         
         print("🧪 ConnectWork: Testing network connectivity...")
+        if let node = context.node {
+            print("🧪 ConnectWork: Testing node: \(node.name)")
+        }
+        
+        // 添加小延迟，等待连接稳定
+        try await Task.sleep(nanoseconds: 2_000_000_000) // 2秒
+        print("🧪 ConnectWork: Starting network test after 2s delay...")
         
         // 为网络测试添加超时保护
+        let startTime = Date()
         let result = await ConnectSuccess.isSuccess()
+        let duration = Date().timeIntervalSince(startTime)
         
+        print("🧪 ConnectWork: Network test completed in \(String(format: "%.2f", duration))s")
         print("🧪 ConnectWork: Network test result: \(result ? "✅ Success" : "❌ Failed")")
         
         if result {
@@ -332,6 +345,10 @@ extension ConnectWork {
             try await self.setStatus(.connect(context: context))
         } else {
             print("🔄 ConnectWork: Network test failed, trying next node...")
+            if let node = context.node {
+                print("🔄 ConnectWork: Failed node: \(node.name)")
+            }
+            
             var ctx = context
             ctx.node = nil
             if ctx.nodes.isEmpty {
@@ -385,3 +402,6 @@ extension ConnectWork {
         let _: [Citys_response] = try await XCBusiness.share.run(work, returnType: nil)
     }
 }
+
+
+
