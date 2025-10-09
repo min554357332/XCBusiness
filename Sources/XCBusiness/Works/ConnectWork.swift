@@ -122,22 +122,16 @@ extension ConnectWork {
         // 状态进入处理
         switch status {
         case .fetchCity:
-            await XCTunnelManager.share.setStatus(.connecting)
             try await self.fetchCity()
         case .fetchNode(let context):
-            await XCTunnelManager.share.setStatus(.connecting)
             try await self.fetchNode(context: context)
         case .fetchGithubNode(let context):
-            await XCTunnelManager.share.setStatus(.connecting)
             try await self.fetchGithubNode(context: context)
         case .connecting(let context):
-            await XCTunnelManager.share.setStatus(.connecting)
             try await connecting(context: context)
         case .test_network(let context):
-            await XCTunnelManager.share.setStatus(.connecting)
             try await self.test_network(context: context)
         case .connect(let context):
-            await XCTunnelManager.share.setStatus(.connecting)
             try await self.connect(context: context)
         case .faile(let context):
             try await self.faile(context: context)
