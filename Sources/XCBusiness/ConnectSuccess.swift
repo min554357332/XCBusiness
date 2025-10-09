@@ -1,16 +1,17 @@
 import Foundation
+import XCTunnelManager
 import XCNetwork
 import VPNConnectionChecker
 
 public actor ConnectSuccess {
     public static func isSuccess(retry: Int = 1) async -> Bool {
-        if await VPNConnectionChecker.checker() {
+        if await XCTunnelManager.share.getStatus() == .connected {
             let result = await ConnectSuccess._isSuccess()
-            if await VPNConnectionChecker.checker() {
+            if await XCTunnelManager.share.getStatus() == .connected {
                 if result {
                     return true
                 } else {
-                    if await VPNConnectionChecker.checker() {
+                    if await XCTunnelManager.share.getStatus() == .connected {
                         if retry <= 3 {
                             return await ConnectSuccess.isSuccess(retry: retry + 1)
                         } else {
