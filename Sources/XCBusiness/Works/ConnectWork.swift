@@ -278,45 +278,12 @@ extension ConnectWork {
             throw NSError(domain: "node encode error", code: -1)
         }
         
+        print("🔗 ConnectWork: Initiating tunnel connection...")
+        try await XCTunnelManager.share.connect(jsonStr)
+        
+        print("✅ ConnectWork: VPN connected successfully")
+        try await self.setStatus(.test_network(context: context))
 
-
-        // 使用 TaskGroup 来处理连接、超时和状态监听
-        try await withThrowingTaskGroup(of: Void.self) { group in
-            group.addTask {
-                print("🔗 ConnectWork: Initiating tunnel connection...")
-                try await XCTunnelManager.share.connect(jsonStr)
-            }
-
-            // 添加状态监听任务
-            group.addTask {
-                print("👂 ConnectWork: Starting VPN status monitoring...")
-                // 监听 VPN 状态变化，添加超时保护
-                for await vpnStatus in NEVPNStatus.asyncStream() {
-                    // 检查任务是否被取消
-                    try Task.checkCancellation()
-                    
-                    print("📡 ConnectWork: VPN status changed to: \(vpnStatus)")
-                    
-                    switch vpnStatus {
-                    case .connected:
-                        print("✅ ConnectWork: VPN connected successfully")
-                        try await self.setStatus(.test_network(context: context))
-                        return
-                    case .disconnected, .disconnecting:
-                        print("🔌 ConnectWork: VPN disconnected/disconnecting")
-                        continue
-                    case .connecting:
-                        print("🔄 ConnectWork: VPN connecting...")
-                        continue
-                    default:
-                        print("⚠️ ConnectWork: Unknown VPN status: \(vpnStatus)")
-                        continue
-                    }
-                }
-            }
-            
-            try await group.next()
-        }
     }
 
     func test_network(context: ConnectContext) async throws {
