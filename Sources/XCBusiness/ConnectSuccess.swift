@@ -5,13 +5,13 @@ import VPNConnectionChecker
 
 public actor ConnectSuccess {
     public static func isSuccess(retry: Int = 1) async -> Bool {
-        if await XCTunnelManager.share.getStatus() == .connected {
+        if await XCTunnelManager.share.getStatus() == .connecting {
             let result = await ConnectSuccess._isSuccess()
-            if await XCTunnelManager.share.getStatus() == .connected {
+            if await XCTunnelManager.share.getStatus() == .connecting {
                 if result {
                     return true
                 } else {
-                    if await XCTunnelManager.share.getStatus() == .connected {
+                    if await XCTunnelManager.share.getStatus() == .connecting {
                         if retry <= 3 {
                             return await ConnectSuccess.isSuccess(retry: retry + 1)
                         } else {
