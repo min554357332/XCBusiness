@@ -316,6 +316,13 @@ extension ConnectWork {
             print("🎉 ConnectWork: Connection successful!")
             try await self.setStatus(.connect(context: context))
         } else {
+            let status = await XCTunnelManager.share.getStatus()
+            if status != .network_availability_testing {
+                try await self.setStatus(.faile(context: context))
+                return
+            }
+            
+            
             print("🔄 ConnectWork: Network test failed, trying next node...")
             if let node = context.node {
                 print("🔄 ConnectWork: Failed node: \(node.name)")
@@ -347,7 +354,7 @@ extension ConnectWork {
         if let node = context.node {
             print("🎉 ConnectWork: Connected to node: \(node.name)")
         }
-        await XCTunnelManager.share.setStatus(.realConnected)
+        await XCTunnelManager.share.setStatus(.connecting)
     }
     
     func faile(context: ConnectContext) async throws {
