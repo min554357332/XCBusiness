@@ -395,4 +395,6 @@ extension ConnectWork {
 func alog(_ format: String, _ args: any CVarArg...) {
     NSLog(format, args)
 }
+#else
+func alog(_ format: String, _ args: any CVarArg...) {}
 #endif
