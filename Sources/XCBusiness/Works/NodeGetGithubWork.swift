@@ -1,5 +1,6 @@
 import Foundation
 import XCNetwork
+import XCEvents
 
 public actor NodeGetGithubWork: @preconcurrency XCWork {
     public let key: String
@@ -58,12 +59,27 @@ public extension NodeGetGithubWork {
         let work_1 = NodeGetGithubWork(countryCode: nil)
         let work_2 = NodeGetGithubWork(countryCode: countryCode)
         
+        var err: Error?
         
-        let work_1_result = try await XCBusiness.share.run(work_1, returnType: Node_response.self)
-        let work_2_result = try await XCBusiness.share.run(work_2, returnType: Node_response.self)
-        if work_2_result.isEmpty {
-            return work_1_result
+        do {
+            let result = try await XCBusiness.share.run(work_2, returnType: Node_response.self)
+            if result.isEmpty == false {
+                return result
+            }
+        } catch {
+            err = error
         }
-        return work_2_result
+        
+        do {
+            let result = try await XCBusiness.share.run(work_1, returnType: Node_response.self)
+            return result
+        } catch {
+            err = error
+        }
+        if let err {
+            Events.error_node_git.fire()
+            throw err
+        }
+        return []
     }
 }

@@ -37,7 +37,7 @@ func host() async throws {
     try await setNetwork()
     let work = HostRequestWork()
     let result = try await XCBusiness.share.run(work, returnType: Host_response.self)
-    print(result)
+    alog(result)
 }
 
 @Test("citys")
@@ -45,7 +45,7 @@ func citys() async throws {
     try await setNetwork()
     let work = CitysRequestWork()
     let result = try await XCBusiness.share.run(work, returnType: Citys_response.self)
-    print(result)
+    alog(result)
 }
 
 @Test("global_config")
@@ -53,7 +53,7 @@ func global_config() async throws {
     try await setNetwork()
     let work = GlobalConfigRequestWork()
     let result = try await XCBusiness.share.run(work, returnType: Global_config_response.self)
-    print(result)
+    alog(result)
 }
 
 @Test("ipconfig")
@@ -65,7 +65,7 @@ func ipconfig() async throws {
     if (result_1?.isEmpty ?? true) == true && (result_2?.isEmpty ?? true) == true {
         throw NSError.init(domain: "err", code: -1)
     }
-    print(1)
+    alog(1)
 }
 
 @Test("nodes")
@@ -78,7 +78,7 @@ func nodes() async throws {
     }
     let work = NodeRequestWork(city_id: city_id)
     let result = try await XCBusiness.share.run(work, returnType: Node_response.self)
-    print(result)
+    alog(result)
 }
 
 @Test("report")
@@ -99,14 +99,14 @@ func report() async throws {
     
     let report_work = ReportRequestWork(name: node.name, retry: 0, core: node.core, agreement: node.agreement, event: "connect")
     let _:[Node_response] = try await XCBusiness.share.run(report_work, returnType: nil)
-    print(1)
+    alog(1)
 }
 
 @Test("urls_test")
 func urls_test() async throws {
     try await setNetwork()
     let result = await ConnectSuccess.isSuccess()
-    print(result)
+    alog(result)
 }
 
 @Test("chose_city")
@@ -120,7 +120,7 @@ func chose_city() async throws {
     
     let chose_city_work = CityChoseWork(city: city)
     let _:[Citys_response] = try await XCBusiness.share.run(chose_city_work, returnType: nil)
-    print(1)
+    alog(1)
 }
 
 @Test("chose_node")
@@ -143,7 +143,7 @@ func chose_node() async throws {
     
     let chose_node_work = NodeChoseWork(node: node)
     let _:[Node_response] = try await XCBusiness.share.run(chose_node_work, returnType: nil)
-    print(1)
+    alog(1)
 }
 
 @Test("get_city")
@@ -154,7 +154,7 @@ func get_city() async throws {
     guard let city = city_result.first else {
         throw NSError.init(domain: "err", code: -1)
     }
-    print(city)
+    alog(city)
 }
 
 @Test("get_node")
@@ -165,5 +165,5 @@ func get_city() async throws {
     guard let node = node_result.first else {
         throw NSError.init(domain: "err", code: -1)
     }
-    print(node)
+    alog(node)
 }

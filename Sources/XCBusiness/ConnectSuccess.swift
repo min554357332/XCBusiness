@@ -81,10 +81,10 @@ public actor ConnectSuccess {
         let work = URLTestWork(url: url)
         do {
             let _:[Node_response] = try await XCBusiness.share.run(work, returnType: nil)
-            print("true === \(url)")
+            alog("true === \(url)")
             return true
         } catch {
-            print("false === \(url)")
+            alog("false === \(url)")
             return false
         }
     }

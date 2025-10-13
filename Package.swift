@@ -6,8 +6,7 @@ import PackageDescription
 let package = Package(
     name: "XCBusiness",
     platforms: [
-        .iOS(.v13),
-        .macOS(.v10_15),
+        .iOS(.v15),
     ],
     products: [
         .library(
@@ -26,6 +25,7 @@ let package = Package(
         .package(url: "https://github.com/hyperoslo/Cache.git", from: "7.4.0"),
         .package(url: "https://github.com/min554357332/XCTunnelManager.git", .upToNextMajor(from: "0.0.1")),
         .package(url: "https://github.com/min554357332/XCBuy.git", .upToNextMajor(from: "0.0.1")),
+        .package(url: "https://github.com/min554357332/XCEvents.git", .upToNextMajor(from: "0.0.1")),
     ],
     targets: [
         .target(
@@ -41,6 +41,7 @@ let package = Package(
                 "AES_256_CBC",
                 "XCTunnelManager",
                 "XCBuy",
+                "XCEvents",
             ]
         ),
         .testTarget(
