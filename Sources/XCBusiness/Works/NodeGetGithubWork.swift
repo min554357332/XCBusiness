@@ -59,27 +59,37 @@ public extension NodeGetGithubWork {
         let work_1 = NodeGetGithubWork(countryCode: nil)
         let work_2 = NodeGetGithubWork(countryCode: countryCode)
         
-        var err: Error?
-        
-        do {
-            let result = try await XCBusiness.share.run(work_2, returnType: Node_response.self)
-            if result.isEmpty == false {
-                return result
+        let result: (NodeGetGithubWork, [Node_response]) = await withTaskGroup { group in
+            group.addTask {
+                do {
+                    return (work_1, try await XCBusiness.share.run(work_1, returnType: Node_response.self))
+                } catch {
+                    alog("ConnectWork: github node countryCode: \(countryCode), err: \(error)")
+                    return (work_1, [])
+                }
             }
-        } catch {
-            err = error
+            group.addTask {
+                do {
+                    return (work_2, try await XCBusiness.share.run(work_1, returnType: Node_response.self))
+                } catch {
+                    alog("ConnectWork: github node err: \(error)")
+                    return (work_2, [])
+                }
+            }
+            var results: [(NodeGetGithubWork, [Node_response])] = []
+            for await res in group {
+                results.append(res)
+            }
+            return results.first { res in
+                if res.0.key == work_1.key && res.1.isEmpty == false {
+                    return true
+                } else {
+                    return false
+                }
+            } ?? results.first(where: { res in
+                return !res.1.isEmpty
+            }) ?? (work_1, [])
         }
-        
-        do {
-            let result = try await XCBusiness.share.run(work_1, returnType: Node_response.self)
-            return result
-        } catch {
-            err = error
-        }
-        if let err {
-            Events.error_node_git.fire()
-            throw err
-        }
-        return []
+        return result.1
     }
 }
