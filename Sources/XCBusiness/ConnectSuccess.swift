@@ -51,9 +51,7 @@ public actor ConnectSuccess {
                     let count = test_urls.count
                     for test_url in test_urls {
                         group.addTask {
-                            if Task.isCancelled {
-                                return false
-                            }
+                            try Task.checkCancellation()
                             let result =  await ConnectSuccess.test(test_url)
                             alog("🧪 ConnectWork: Network test sub result: \(result)")
                             return result
