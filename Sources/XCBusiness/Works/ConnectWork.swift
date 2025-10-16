@@ -287,11 +287,9 @@ extension ConnectWork {
         
         alog("🔗 ConnectWork: Initiating tunnel connection...")
         let status = await XCTunnelManager.share.getStatus()
-        if status != .connected {
-            try await XCTunnelManager.share.connect(jsonStr)
-        } else {
-            try await XCTunnelManager.share.reload(jsonStr)
-        }
+        try await XCTunnelManager.share.stop()
+        try await Task.sleep(nanoseconds: 5_000_000_000)
+        try await XCTunnelManager.share.connect(jsonStr)
         
         alog("✅ ConnectWork: VPN connected successfully")
         try await self.setStatus(.test_network(context: context))
