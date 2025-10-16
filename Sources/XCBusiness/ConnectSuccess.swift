@@ -12,16 +12,20 @@ public actor ConnectSuccess {
             let result = await ConnectSuccess._isSuccess()
             let sysStatus_pre = try await XCTunnelManager.share.getManager().connection.status
             if sysStatus_pre == .disconnected || sysStatus_pre == .disconnecting || sysStatus_pre == .invalid {
+                alog("🧪 ConnectWork: Network test result: ❌ Failed sys status: \(sysStatus_pre)")
                 return false
             }
             if result {
                 let sysStatus_next = try await XCTunnelManager.share.getManager().connection.status
                 if sysStatus_next == .disconnected || sysStatus_next == .disconnecting || sysStatus_next == .invalid {
+                    alog("🧪 ConnectWork: Network test result: ❌ Failed sys status: \(sysStatus_pre)")
                     return false
                 } else {
+                    alog("🧪 ConnectWork: Network test result: ✅ Success")
                     return true
                 }
             }
+            alog("🧪 ConnectWork: Network test result: ❌ Failed nexting")
         }
         return false
     }
