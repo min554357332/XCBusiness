@@ -7,6 +7,8 @@ public actor NodeGetGithubWork: @preconcurrency XCWork {
     internal var task: Task<[Node_response], Error>?
     private let countryCode: String?
     
+    private var fire_retry = 0
+    
     init(
         countryCode: String?
     ) {
@@ -31,6 +33,10 @@ public actor NodeGetGithubWork: @preconcurrency XCWork {
             await self.shotdown()
             return result as [Sendable & Codable]
         } catch {
+            self.fire_retry += 1
+            if self.fire_retry <= 3 {
+                return try await self.run()
+            }
             await self.shotdown()
             throw error
         }

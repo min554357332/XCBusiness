@@ -7,6 +7,8 @@ public actor NodeRequestWork: @preconcurrency XCWork {
     private var retryCount = 1
     let city_id: Int
     
+    private var fire_retry = 0
+    
     public init(
         city_id: Int,
         retry: Int
@@ -28,6 +30,10 @@ public actor NodeRequestWork: @preconcurrency XCWork {
             await self.shotdown()
             return result as [Sendable & Codable]
         } catch {
+            self.fire_retry += 1
+            if self.fire_retry <= 3 {
+                return try await self.run()
+            }
             await self.shotdown()
             throw error
         }
