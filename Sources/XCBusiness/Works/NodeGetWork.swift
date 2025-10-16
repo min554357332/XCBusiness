@@ -34,8 +34,8 @@ public actor NodeGetWork: @preconcurrency XCWork {
     
 }
 
-extension NodeGetWork {
-    func fire() async throws -> Node_response? {
+public extension NodeGetWork {
+    public func fire() async throws -> Node_response? {
         try await XCNetwork.share.app_groups_decorator.get_chose_node()
     }
 }
