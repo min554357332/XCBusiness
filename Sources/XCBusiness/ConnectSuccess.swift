@@ -11,6 +11,7 @@ public actor ConnectSuccess {
             let status_2 = await XCTunnelManager.share.getStatus()
             if status_2 == .network_availability_testing {
                 if result {
+                    alog("🧪 ConnectWork: Network test result: Success retry: \(retry)")
                     return true
                 } else {
                     let status_3 = await XCTunnelManager.share.getStatus()
@@ -19,15 +20,18 @@ public actor ConnectSuccess {
                             return await ConnectSuccess.isSuccess(retry: retry + 1)
                         } else {
                             // 重试结束，连接失败
+                            alog("🧪 ConnectWork: Network test result: faile retry: \(retry)")
                             return false
                         }
                     } else {
                         // VPN未连接
+                        alog("🧪 ConnectWork: Network test result: faile retry: \(retry)")
                         return false
                     }
                 }
             }
         }
+        alog("🧪 ConnectWork: Network test result: faile retry: \(retry)")
         return false
     }
     
