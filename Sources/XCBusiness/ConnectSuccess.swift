@@ -10,12 +10,12 @@ public actor ConnectSuccess {
     public static func isSuccess() async throws -> Bool {
         for index in 0 ..< 3 {
             alog("🧪 ConnectWork: Network test start")
-            let result = await ConnectSuccess._isSuccess()
             let sysStatus_pre = try await XCTunnelManager.share.getManager().connection.status
             if sysStatus_pre != .connect {
                 alog("🧪 ConnectWork: Network test result: ❌ Failed sys status: \(sysStatus_pre)")
                 return false
             }
+            let result = await ConnectSuccess._isSuccess()
             if result {
                 let sysStatus_next = try await XCTunnelManager.share.getManager().connection.status
                 if sysStatus_next == .connect {
