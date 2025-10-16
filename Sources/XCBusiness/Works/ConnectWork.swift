@@ -25,12 +25,12 @@ public extension NEVPNStatus {
     }
 }
 
-public struct ConnectContext {
-    var nodes: [Node_response]
-    let city: Citys_response
-    var node: Node_response?
-    var retry: Int
-    var node_index: Int
+public struct ConnectContext: Sendable {
+    public var nodes: [Node_response]
+    public let city: Citys_response
+    public var node: Node_response?
+    public var retry: Int
+    public var node_index: Int
 }
 
 public enum ConnectStatus {
@@ -47,8 +47,11 @@ public actor ConnectWork: @preconcurrency XCWork {
     public let key: String = "connect"
     internal var task: Task<(), Error>?
     private let city: Citys_response?
+    private let complete: (ConnectContext) -> Void
     
-    public init(_ city: Citys_response?) {
+    
+    public init(_ city: Citys_response?, complete: @escaping (ConnectContext) -> Void) {
+        self.complete = complete
         self.city = city
     }
     
@@ -105,24 +108,6 @@ extension ConnectWork {
     func setStatus(_ status: ConnectStatus) async throws {
 
         self.status = status
-        
-        // 打印状态变化
-        switch status {
-        case .fetchCity:
-            alog("📍 ConnectWork: Status changed to fetchCity")
-        case .fetchNode(let context):
-            alog("🌐 ConnectWork: Status changed to fetchNode, retry: \(context.retry), index: \(context.node_index)")
-        case .fetchGithubNode(let context):
-            alog("🐙 ConnectWork: Status changed to fetchGithubNode, retry: \(context.retry), index: \(context.node_index)")
-        case .connecting(let context):
-            alog("🔗 ConnectWork: Status changed to connecting, node: \(context.node?.name ?? "unknown")")
-        case .test_network(let context):
-            alog("🧪 ConnectWork: Status changed to test_network")
-        case .connect(let context):
-            alog("✅ ConnectWork: Status changed to connect (success)")
-        case .faile(let context):
-            alog("❌ ConnectWork: Status changed to failed")
-        }
         
         // 状态进入处理
         switch status {
@@ -354,6 +339,7 @@ extension ConnectWork {
             alog("🎉 ConnectWork: Connected to node: \(node.name)")
         }
         await XCTunnelManager.share.setStatus(.connected)
+        self.complete(context)
     }
     
     func faile(context: ConnectContext) async throws {
@@ -369,7 +355,7 @@ extension ConnectWork {
 }
 
 extension ConnectWork {
-    public static func fire(_ city: Citys_response?) async throws {
+    public static func fire(_ city: Citys_response?, complete: @escaping (ConnectContext) -> Void) async throws {
         alog("🔥 ConnectWork: Static fire method called")
         if let city = city {
             alog("🔥 ConnectWork: Using specified city: \(city.city)")
@@ -377,7 +363,7 @@ extension ConnectWork {
             alog("🔥 ConnectWork: No city specified, will auto-select")
         }
         
-        let work = ConnectWork(city)
+        let work = ConnectWork(city, complete: complete)
         let _: [Citys_response] = try await XCBusiness.share.run(work, returnType: nil)
     }
 }
