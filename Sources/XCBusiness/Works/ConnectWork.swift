@@ -314,7 +314,7 @@ extension ConnectWork {
         }
         
         // 添加小延迟，等待连接稳定
-        try await Task.sleep(nanoseconds: 2_000_000_000) // 2秒
+        try await Task.sleep(nanoseconds: 1_000_000_000) // 2秒
         alog("🧪 ConnectWork: Starting network test after 2s delay...")
         
         // 为网络测试添加超时保护
