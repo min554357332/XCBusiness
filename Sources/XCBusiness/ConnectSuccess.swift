@@ -66,12 +66,14 @@ public actor ConnectSuccess {
                 // 达到成功率就取消剩余任务
                 if (Double(success_count) / Double(count)) >= success_rate {
                     group.cancelAll()
+                    alog("🧪 ConnectWork: Network test sub result: true, group.cancelAll()")
                     return true
                 }
                 
                 // 达到失败率就取消剩余任务
                 if (Double(failed_count) / Double(count)) > (1 - success_rate) {
                     group.cancelAll()
+                    alog("🧪 ConnectWork: Network test sub result: false, group.cancelAll()")
                     return false
                 }
             }
