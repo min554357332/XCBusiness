@@ -194,12 +194,14 @@ extension ConnectWork {
         
         alog("🌐 ConnectWork: Fetching nodes for city: \(context.city.city), retry: \(context.retry)")
         
+        try await XCTunnelManager.share.stop()
+        try await Task.sleep(nanoseconds: 500_000_000)
+        
         let nodes_result: [Node_response]
         // 节点索引越界时
         if context.nodes.count <= context.node_index {
             alog("🌐 ConnectWork: Node index out of bounds (\(context.node_index) >= \(context.nodes.count)), retrying...")
-            try await XCTunnelManager.share.stop()
-            try await Task.sleep(nanoseconds: 500_000_000)
+
             var ctx = context
             ctx.retry += 1
             ctx.node_index = 0
