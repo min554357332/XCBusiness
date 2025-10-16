@@ -334,22 +334,15 @@ extension ConnectWork {
             
             var ctx = context
             ctx.node = nil
-            if ctx.nodes.isEmpty {
-                alog("🐙 ConnectWork: No more regular nodes, switching to GitHub nodes")
-                ctx.retry = 1
+            if ctx.node_index + 1 >= ctx.nodes.count {
+                alog("🔄 ConnectWork: Reached end of node list, retrying with next batch")
+                ctx.retry += 1
                 ctx.node_index = 0
-                try await self.setStatus(.fetchGithubNode(context: ctx))
             } else {
-                if ctx.node_index + 1 >= ctx.nodes.count {
-                    alog("🔄 ConnectWork: Reached end of node list, retrying with next batch")
-                    ctx.retry += 1
-                    ctx.node_index = 0
-                } else {
-                    alog("🔄 ConnectWork: Trying next node in list (index: \(ctx.node_index + 1))")
-                    ctx.node_index += 1
-                }
-                try await self.setStatus(.fetchNode(context: ctx))
+                alog("🔄 ConnectWork: Trying next node in list (index: \(ctx.node_index + 1))")
+                ctx.node_index += 1
             }
+            try await self.setStatus(.fetchNode(context: ctx))
         }
     }
 
@@ -369,6 +362,7 @@ extension ConnectWork {
         alog("❌ ConnectWork: Setting status to failed and stopping tunnel")
         await XCTunnelManager.share.setStatus(.realFaile)
         try await XCTunnelManager.share.stop()
+        throw NSError(domain: "Connect faile", code: -1)
     }
 }
 
