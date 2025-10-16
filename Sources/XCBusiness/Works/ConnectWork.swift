@@ -303,6 +303,7 @@ extension ConnectWork {
     func test_network(context: ConnectContext) async throws {
         // 检查任务是否被取消
         try Task.checkCancellation()
+        await XCTunnelManager.share.setStatus(.network_availability_testing)
         
         alog("🧪 ConnectWork: Testing network connectivity...")
         if let node = context.node {
@@ -350,7 +351,7 @@ extension ConnectWork {
         if let node = context.node {
             alog("🎉 ConnectWork: Connected to node: \(node.name)")
         }
-        await XCTunnelManager.share.setStatus(.connecting)
+        await XCTunnelManager.share.setStatus(.connected)
     }
     
     func faile(context: ConnectContext) async throws {
