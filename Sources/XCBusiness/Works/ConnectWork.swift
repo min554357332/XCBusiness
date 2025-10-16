@@ -25,7 +25,7 @@ public extension NEVPNStatus {
     }
 }
 
-public struct ConnectContext: Sendable {
+public struct ConnectContext: Sendable, Codable {
     public var nodes: [Node_response]
     public let city: Citys_response
     public var node: Node_response?
