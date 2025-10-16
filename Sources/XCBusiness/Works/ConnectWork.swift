@@ -316,6 +316,7 @@ extension ConnectWork {
             try await self.setStatus(.connect(context: context))
         } else {
             Events.connect_failed.fire()
+            self.report(context: context, event: "failed")
             let status = await XCTunnelManager.share.getStatus()
             if status == .disconnected || status == .disconnecting {
                 try await self.setStatus(.faile(context: context))
@@ -343,6 +344,7 @@ extension ConnectWork {
         var ctx = context
         ctx.success = true
         self.complete(ctx)
+        self.report(context: context, event: "connect")
     }
     
     func faile(context: ConnectContext) async throws {
@@ -356,7 +358,24 @@ extension ConnectWork {
         var ctx = context
         ctx.success = false
         self.complete(ctx)
+        self.report(context: context, event: "failed")
         throw NSError(domain: "Connect faile", code: -1)
+    }
+}
+
+extension ConnectWork {
+    func report(context: ConnectContext, event: String) {
+        Task {
+            guard let node_name = context.node?.name else { return }
+            let retry = context.retry
+            guard let core = context.node?.core else { return }
+            guard let argeement = context.node?.agreement else { return }
+            do {
+                try await ReportRequestWork.fire(name: node_name, retry: retry, core: core, agreement: argeement, event: event)
+            } catch {
+                alog("❌ ConnectWork: report failed: \(error)")
+            }
+        }
     }
 }
 
