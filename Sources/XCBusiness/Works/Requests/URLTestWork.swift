@@ -46,6 +46,7 @@ private extension URLTestWork {
             req.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
         }
         let task = request.serializingData()
+        _ = try await task.value
         let response = await task.response
         if response.response?.statusCode == nil {
             throw NSError(domain: "not 204", code: response.response?.statusCode ?? -1)
