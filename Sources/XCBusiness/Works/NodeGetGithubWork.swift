@@ -58,9 +58,7 @@ private extension NodeGetGithubWork {
 
 public extension NodeGetGithubWork {
     static func fire() async throws -> [Node_response] {
-        
-        let ipconfig = try await IpconfigRequestWork.fire()
-        let countryCode = ipconfig.ipcountry
+        let countryCode = try await ReqDefArge.country()
         
         let work_1 = NodeGetGithubWork(countryCode: nil)
         let work_2 = NodeGetGithubWork(countryCode: countryCode)
