@@ -197,26 +197,26 @@ extension ConnectWork {
         try await XCTunnelManager.share.stop()
         try await Task.sleep(nanoseconds: 500_000_000)
         
+        var ctx = context
         let nodes_result: [Node_response]
         // 节点索引越界时
         if context.nodes.count <= context.node_index {
             alog("🌐 ConnectWork: Node index out of bounds (\(context.node_index) >= \(context.nodes.count)), retrying...")
-
             var ctx = context
             ctx.retry += 1
             ctx.node_index = 0
             nodes_result = try await NodeRequestWork.fire(
-                city_id: context.city.id,
-                retry: context.retry
+                city_id: ctx.city.id,
+                retry: ctx.retry
             )
         } else {
-            nodes_result = context.nodes
+            nodes_result = ctx.nodes
         }
         
         alog("🌐 ConnectWork: Received \(nodes_result.count) nodes")
         
         // 节点为空时，尝试从 GitHub 获取
-        if nodes_result.isEmpty && context.retry == 1 {
+        if nodes_result.isEmpty && ctx.retry == 1 {
             alog("🌐 ConnectWork: No nodes available, switching to GitHub nodes")
             var ctx = context
             ctx.nodes = []
@@ -229,11 +229,10 @@ extension ConnectWork {
             throw NSError(domain: "nodes empty", code: -1)
         }
         
-        let node = nodes_result[context.node_index]
-        alog("🌐 ConnectWork: Selected node: \(node.name) (index: \(context.node_index))")
+        let node = nodes_result[ctx.node_index]
+        alog("🌐 ConnectWork: Selected node: \(node.name) (index: \(ctx.node_index))")
         
         try await NodeChoseWork.fire(node)
-        var ctx = context
         ctx.nodes = nodes_result
         ctx.node = node
         try await self.setStatus(.connecting(
