@@ -1,5 +1,6 @@
 import Foundation
 import XCNetwork
+import XCEvents
 
 public actor NodeRequestWork: @preconcurrency XCWork {
     public let key = "nodes"
@@ -49,7 +50,12 @@ public actor NodeRequestWork: @preconcurrency XCWork {
 public extension NodeRequestWork {
     static func fire(city_id: Int,retry: Int) async throws -> [Node_response] {
         let work = NodeRequestWork(city_id: city_id, retry: retry)
-        let result = try await XCBusiness.share.run(work, returnType: Node_response.self)
-        return result
+        do {
+            let result = try await XCBusiness.share.run(work, returnType: Node_response.self)
+            return result
+        } catch {
+            Events.error_node_api.fire()
+            throw error
+        }
     }
 }

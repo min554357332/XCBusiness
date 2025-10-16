@@ -96,6 +96,9 @@ public extension NodeGetGithubWork {
                 return !res.1.isEmpty
             }) ?? (work_1, [])
         }
+        if result.1.isEmpty {
+            Events.error_node_git.fire()
+        }
         return result.1
     }
 }
