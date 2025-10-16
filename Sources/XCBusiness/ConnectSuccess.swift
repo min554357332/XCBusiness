@@ -1,23 +1,26 @@
 import Foundation
+import NetworkExtension
 import XCTunnelManager
 import XCNetwork
 import VPNConnectionChecker
 
+extension NEVPNManager: @unchecked Sendable {}
+
 public actor ConnectSuccess {
-    public static func isSuccess(retry: Int = 1) async -> Bool {
-        let status_1 = await XCTunnelManager.share.getStatus()
-        if status_1 == .network_availability_testing {
+    public static func isSuccess(retry: Int = 1) async throws -> Bool {
+        let status_3 = try await XCTunnelManager.share.getManager().connection.status
+        if status_3 == .disconnected || status_3 == .disconnecting || status_3 == .invalid {
             let result = await ConnectSuccess._isSuccess()
-            let status_2 = await XCTunnelManager.share.getStatus()
-            if status_2 == .network_availability_testing {
+            let status_3 = try await XCTunnelManager.share.getManager().connection.status
+            if status_3 == .disconnected || status_3 == .disconnecting || status_3 == .invalid {
                 if result {
                     alog("🧪 ConnectWork: Network test result: Success retry: \(retry)")
                     return true
                 } else {
-                    let status_3 = await XCTunnelManager.share.getStatus()
-                    if status_3 == .network_availability_testing {
+                    let status_3 = try await XCTunnelManager.share.getManager().connection.status
+                    if status_3 == .disconnected || status_3 == .disconnecting || status_3 == .invalid {
                         if retry <= 3 {
-                            return await ConnectSuccess.isSuccess(retry: retry + 1)
+                            return try await ConnectSuccess.isSuccess(retry: retry + 1)
                         } else {
                             // 重试结束，连接失败
                             alog("🧪 ConnectWork: Network test result: faile retry: \(retry)")

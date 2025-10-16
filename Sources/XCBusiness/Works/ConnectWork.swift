@@ -93,6 +93,7 @@ extension ConnectWork {
     func fire() async throws {
         alog("🚀 ConnectWork: Starting connection process")
         do {
+            await XCTunnelManager.share.setStatus(.connecting)
             try await self.setStatus(.fetchCity)
             Events.connect_session_success.fire()
         } catch {
@@ -300,7 +301,7 @@ extension ConnectWork {
     func test_network(context: ConnectContext) async throws {
         // 检查任务是否被取消
         try Task.checkCancellation()
-        await XCTunnelManager.share.setStatus(.network_availability_testing)
+        await XCTunnelManager.share.setStatus(.connecting)
         
         alog("🧪 ConnectWork: Testing network connectivity...")
         if let node = context.node {
@@ -313,8 +314,7 @@ extension ConnectWork {
         
         // 为网络测试添加超时保护
         let startTime = Date()
-        var result = await ConnectSuccess.isSuccess()
-        await XCTunnelManager.share.setStatus(.network_availability_testing)
+        var result = try await ConnectSuccess.isSuccess()
         let duration = Date().timeIntervalSince(startTime)
         
         alog("🧪 ConnectWork: Network test completed in \(String(format: "%.2f", duration))s")
@@ -358,7 +358,7 @@ extension ConnectWork {
             alog("❌ ConnectWork: Last attempted node: \(node.name)")
         }
         alog("❌ ConnectWork: Setting status to failed and stopping tunnel")
-        await XCTunnelManager.share.setStatus(.realFaile)
+        await XCTunnelManager.share.setStatus(.realDisconnected)
         try await XCTunnelManager.share.stop()
         throw NSError(domain: "Connect faile", code: -1)
     }
