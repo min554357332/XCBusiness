@@ -6,10 +6,12 @@ public actor CitysRequestWork: @preconcurrency XCWork {
     internal var task: Task<[Citys_response], Error>?
     private var retryCount = 0
     
-    private let retryMax = 3
+    private var retryMax = 3
+    private var timeout: TimeInterval = 20
     
-    public init(_ retryMax: Int = 3) {
+    public init(_ retryMax: Int = 3, timeout: TimeInterval = 20) {
         self.retryMax = retryMax
+        self.timeout = timeout
     }
     
     public func run() async throws -> [Sendable & Codable] {
@@ -19,7 +21,7 @@ public actor CitysRequestWork: @preconcurrency XCWork {
             }
         }
         let task = Task.detached {
-            try await Citys_request.fire()
+            try await Citys_request.fire(timeout: self.timeout)
         }
         self.task = task
         do {
@@ -45,8 +47,8 @@ public actor CitysRequestWork: @preconcurrency XCWork {
 
 
 public extension CitysRequestWork {
-    static func fire(_ retryMax: Int = 3) async throws -> [Citys_response] {
-        let work = CitysRequestWork()
+    static func fire(_ retryMax: Int = 3, timeout: TimeInterval = 20) async throws -> [Citys_response] {
+        let work = CitysRequestWork(retryMax, timeout: timeout)
         return try await XCBusiness.share.run(work, returnType: Citys_response.self)
     }
 }

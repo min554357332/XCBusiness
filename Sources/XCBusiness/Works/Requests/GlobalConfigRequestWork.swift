@@ -7,10 +7,12 @@ public actor GlobalConfigRequestWork: @preconcurrency XCWork {
     internal var task: Task<Global_config_response, Error>?
     private var retryCount = 0
     
-    private let retryMax = 3
+    private var retryMax = 3
+    private var timeout: TimeInterval = 20
     
-    public init(_ retryMax: Int = 3) {
+    public init(_ retryMax: Int = 3, timeout: TimeInterval = 20) {
         self.retryMax = retryMax
+        self.timeout = timeout
     }
     
     public func run() async throws -> [Sendable & Codable] {
@@ -45,8 +47,8 @@ public actor GlobalConfigRequestWork: @preconcurrency XCWork {
 }
 
 public extension GlobalConfigRequestWork {
-    static func fire(_ retryMax: Int = 3) async throws -> Global_config_response {
-        let work = GlobalConfigRequestWork()
+    static func fire(_ retryMax: Int = 3, timeout: TimeInterval = 20) async throws -> Global_config_response {
+        let work = GlobalConfigRequestWork(retryMax, timeout: timeout)
         let result = try await XCBusiness.share.run(work, returnType: Global_config_response.self)
         guard let first = result.first else { throw NSError(domain: "err", code: -1) }
         return first
