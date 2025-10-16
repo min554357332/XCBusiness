@@ -85,9 +85,6 @@ public actor ConnectSuccess {
             }
             return false
         }
-#if DEBUG
-        return false
-#endif
         return result
     }
     
