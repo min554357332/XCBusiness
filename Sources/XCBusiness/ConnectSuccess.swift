@@ -82,6 +82,9 @@ public actor ConnectSuccess {
     }
     
     public static func test(_ url: String) async -> Bool {
+        #if DEBUG
+        return false
+        #endif
         let work = URLTestWork(url: url)
         do {
             let _:[Node_response] = try await XCBusiness.share.run(work, returnType: nil)
