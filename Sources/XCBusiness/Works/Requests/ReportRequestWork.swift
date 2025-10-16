@@ -60,7 +60,7 @@ public actor ReportRequestWork: @preconcurrency XCWork {
 }
 
 public extension ReportRequestWork {
-    static func fire(
+    public static func fire(
         name: String,
         retry: Int,
         core: String,
