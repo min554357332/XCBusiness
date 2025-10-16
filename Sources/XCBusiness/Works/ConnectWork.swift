@@ -211,6 +211,8 @@ extension ConnectWork {
             ctx.retry = 1000
             try await self.setStatus(.fetchGithubNode(context: ctx))
             return
+        } else if nodes_result.isEmpty {
+            throw NSError(domain: "nodes empty", code: -1)
         }
         // 节点索引越界时，重试获取节点，会一直到节点列表为空，不会返回相同的节点列表
         if nodes_result.count <= context.node_index {
