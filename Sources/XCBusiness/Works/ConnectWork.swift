@@ -317,6 +317,7 @@ extension ConnectWork {
         // 为网络测试添加超时保护
         let startTime = Date()
         var result = await ConnectSuccess.isSuccess()
+        await XCTunnelManager.share.setStatus(.network_availability_testing)
         let duration = Date().timeIntervalSince(startTime)
         
         alog("🧪 ConnectWork: Network test completed in \(String(format: "%.2f", duration))s")
