@@ -194,10 +194,20 @@ extension ConnectWork {
         
         alog("🌐 ConnectWork: Fetching nodes for city: \(context.city.city), retry: \(context.retry)")
         
-        let nodes_result = try await NodeRequestWork.fire(
-            city_id: context.city.id,
-            retry: context.retry
-        )
+        let nodes_result: [Node_response]
+        // 节点索引越界时
+        if context.nodes.count <= context.node_index {
+            alog("🌐 ConnectWork: Node index out of bounds (\(context.node_index) >= \(context.nodes.count)), retrying...")
+            var ctx = context
+            ctx.retry += 1
+            ctx.node_index = 0
+            nodes_result = try await NodeRequestWork.fire(
+                city_id: context.city.id,
+                retry: context.retry
+            )
+        } else {
+            nodes_result = context.nodes
+        }
         
         alog("🌐 ConnectWork: Received \(nodes_result.count) nodes")
         
@@ -213,15 +223,6 @@ extension ConnectWork {
             return
         } else if nodes_result.isEmpty {
             throw NSError(domain: "nodes empty", code: -1)
-        }
-        // 节点索引越界时，重试获取节点，会一直到节点列表为空，不会返回相同的节点列表
-        if nodes_result.count <= context.node_index {
-            alog("🌐 ConnectWork: Node index out of bounds (\(context.node_index) >= \(nodes_result.count)), retrying...")
-            var ctx = context
-            ctx.retry += 1
-            ctx.node_index = 0
-            try await self.setStatus(.fetchNode(context: ctx))
-            return
         }
         
         let node = nodes_result[context.node_index]
@@ -334,14 +335,7 @@ extension ConnectWork {
             
             var ctx = context
             ctx.node = nil
-            if ctx.node_index + 1 >= ctx.nodes.count {
-                alog("🔄 ConnectWork: Reached end of node list, retrying with next batch")
-                ctx.retry += 1
-                ctx.node_index = 0
-            } else {
-                alog("🔄 ConnectWork: Trying next node in list (index: \(ctx.node_index + 1))")
-                ctx.node_index += 1
-            }
+            ctx.node_index += 1
             try await self.setStatus(.fetchNode(context: ctx))
         }
     }
