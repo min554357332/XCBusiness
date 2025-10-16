@@ -52,7 +52,9 @@ public actor ConnectSuccess {
                     if Task.isCancelled {
                         return false
                     }
-                    return await ConnectSuccess.test(test_url)
+                    let result =  await ConnectSuccess.test(test_url)
+                    alog("🧪 ConnectWork: Network test sub result: \(result)")
+                    return result
                 }
             }
             for await res in group {
