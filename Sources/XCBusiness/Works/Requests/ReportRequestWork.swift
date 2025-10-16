@@ -2,7 +2,7 @@ import Foundation
 import XCNetwork
 
 public actor ReportRequestWork: @preconcurrency XCWork {
-    public let key = "nodes"
+    public let key = "report"
     internal var task: Task<(), Error>?
     private var retryCount = 0
     let name: String
