@@ -100,6 +100,7 @@ public actor ConnectSuccess {
             return true
         } catch {
             alog("false === \(url)")
+            alog("ConnectWork: Network test err: \(error)")
             return false
         }
     }
