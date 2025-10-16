@@ -68,7 +68,7 @@ public extension ReportRequestWork {
         event: String,
         duration: Int? = nil
     ) async throws {
-        let report_work = ReportRequestWork(name: name, retry: retry, core: core, agreement: agreement, event: event)
+        let report_work = ReportRequestWork(name: name, retry: retry, core: core, agreement: agreement, event: event, duration: duration)
         let _:[Node_response] = try await XCBusiness.share.run(report_work, returnType: nil)
     }
 }
