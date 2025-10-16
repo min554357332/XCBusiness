@@ -52,7 +52,7 @@ public actor NodeGetGithubWork: @preconcurrency XCWork {
 
 private extension NodeGetGithubWork {
     func fire() async throws -> [Node_response] {
-        return try await Node_github_request.fire(self.countryCode)
+        return try await Node_github_request.fire(self.countryCode, timeout: 20)
     }
 }
 

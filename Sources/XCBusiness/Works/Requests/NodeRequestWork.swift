@@ -22,7 +22,7 @@ public actor NodeRequestWork: @preconcurrency XCWork {
             await oldTask.shotdown()
         }
         let task = Task.detached {
-            try await Node_request.fire(self.city_id, retry: self.retryCount)
+            try await Node_request.fire(self.city_id, retry: self.retryCount, timeout: 20)
         }
         self.task = task
         do {
