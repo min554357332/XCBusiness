@@ -202,17 +202,10 @@ extension ConnectWork {
         let nodes_result: [Node_response]
         // 节点索引越界时
         if ctx.node == nil {
-            #if DEBUG
-            nodes_result = try await NodeRequestWork.fire(
-                city_id: ctx.city.id,
-                retry: 4
-            )
-            #else
             nodes_result = try await NodeRequestWork.fire(
                 city_id: ctx.city.id,
                 retry: ctx.retry
             )
-            #endif
         } else if ctx.nodes.count <= ctx.node_index {
             alog("🌐 ConnectWork: Node index out of bounds (\(context.node_index) >= \(context.nodes.count)), retrying...")
             ctx.retry += 1
