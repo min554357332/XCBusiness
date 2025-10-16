@@ -11,14 +11,14 @@ public actor ConnectSuccess {
         for index in 0 ..< 3 {
             alog("🧪 ConnectWork: Network test start")
             let sysStatus_pre = try await XCTunnelManager.share.getManager().connection.status
-            if sysStatus_pre != .connect {
+            if sysStatus_pre != .connected {
                 alog("🧪 ConnectWork: Network test result: ❌ Failed sys status: \(sysStatus_pre)")
                 return false
             }
             let result = await ConnectSuccess._isSuccess()
             if result {
                 let sysStatus_next = try await XCTunnelManager.share.getManager().connection.status
-                if sysStatus_next == .connect {
+                if sysStatus_next == .connected {
                     alog("🧪 ConnectWork: Network test result: ❌ Failed sys status: \(sysStatus_pre)")
                     return false
                 } else {
