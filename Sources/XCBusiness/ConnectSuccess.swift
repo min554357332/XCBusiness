@@ -43,7 +43,7 @@ public actor ConnectSuccess {
         let test_urls = global_config_result_first.test_urls ?? []
         
         
-        let result: Bool = await withCheckedContinuation { c in
+        let result: Bool = await withUnsafeContinuation { c in
             Task {
                 await withTaskGroup(of: Bool.self) { group in
                     var success_count = 0
@@ -51,7 +51,9 @@ public actor ConnectSuccess {
                     let count = test_urls.count
                     for test_url in test_urls {
                         group.addTask {
-                            try Task.checkCancellation()
+                            if Task.isCancelled {
+                                return false
+                            }
                             let result =  await ConnectSuccess.test(test_url)
                             alog("🧪 ConnectWork: Network test sub result: \(result)")
                             return result
