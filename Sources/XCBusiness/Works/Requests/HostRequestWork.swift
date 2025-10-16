@@ -6,8 +6,11 @@ public actor HostRequestWork: @preconcurrency XCWork {
     public let key = "host"
     internal var task: Task<Host_response, Error>?
     private var retryCount = 0
+    private let retryMax = 3
     
-    public init() {}
+    public init(_ retryMax: Int = 3) {
+        self.retryMax = retryMax
+    }
     
     public func run() async throws -> [Sendable & Codable] {
         if self.retryCount == 0 {
@@ -25,7 +28,7 @@ public actor HostRequestWork: @preconcurrency XCWork {
             return [result as Sendable & Codable]
         } catch {
             self.retryCount += 1
-            if self.retryCount <= 3 {
+            if self.retryCount <= self.retryMax {
                 return try await self.run()
             }
             await self.shotdown()
@@ -41,8 +44,8 @@ public actor HostRequestWork: @preconcurrency XCWork {
 }
 
 public extension HostRequestWork {
-    static func fire() async throws -> Host_response {
-        let work = HostRequestWork()
+    static func fire(_ retryMax: Int = 3) async throws -> Host_response {
+        let work = HostRequestWork(retryMax)
         let result = try await XCBusiness.share.run(work, returnType: Host_response.self)
         guard let first = result.first else { throw NSError(domain: "err", code: -1) }
         return first
