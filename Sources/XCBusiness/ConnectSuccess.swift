@@ -85,11 +85,7 @@ public actor ConnectSuccess {
             }
             return false
         }
-        #if DEBUG
-        return false
-        #else
         return result
-        #endif
     }
     
     public static func test(_ url: String) async throws -> Bool {
