@@ -58,7 +58,7 @@ public actor ConnectSuccess {
                         alog("🧪 ConnectWork: Network test sub result: \(test_result)")
                         return test_result
                     } catch {
-                        alog("🧪 ConnectWork: Network test sub result: false")
+                        alog("🧪 ConnectWork: Network test sub result: false \(error)")
                         return false
                     }
                 }
