@@ -198,6 +198,8 @@ extension ConnectWork {
         // 节点索引越界时
         if context.nodes.count <= context.node_index {
             alog("🌐 ConnectWork: Node index out of bounds (\(context.node_index) >= \(context.nodes.count)), retrying...")
+            try await XCTunnelManager.share.stop()
+            try await Task.sleep(nanoseconds: 500_000_000)
             var ctx = context
             ctx.retry += 1
             ctx.node_index = 0
@@ -286,8 +288,6 @@ extension ConnectWork {
         }
         
         alog("🔗 ConnectWork: Initiating tunnel connection...")
-        try await XCTunnelManager.share.stop()
-        try await Task.sleep(nanoseconds: 500_000_000)
         try await XCTunnelManager.share.connect(jsonStr)
         
         alog("✅ ConnectWork: VPN connected successfully")
