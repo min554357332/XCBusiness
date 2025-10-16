@@ -202,7 +202,6 @@ extension ConnectWork {
         // 节点索引越界时
         if context.nodes.count <= context.node_index {
             alog("🌐 ConnectWork: Node index out of bounds (\(context.node_index) >= \(context.nodes.count)), retrying...")
-            var ctx = context
             ctx.retry += 1
             ctx.node_index = 0
             nodes_result = try await NodeRequestWork.fire(
@@ -218,7 +217,6 @@ extension ConnectWork {
         // 节点为空时，尝试从 GitHub 获取
         if nodes_result.isEmpty && ctx.retry == 1 {
             alog("🌐 ConnectWork: No nodes available, switching to GitHub nodes")
-            var ctx = context
             ctx.nodes = []
             ctx.node = nil
             ctx.node_index = 0
