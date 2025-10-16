@@ -31,6 +31,7 @@ public struct ConnectContext: Sendable {
     public var node: Node_response?
     public var retry: Int
     public var node_index: Int
+    public var success: Bool = false
 }
 
 public enum ConnectStatus {
@@ -339,7 +340,9 @@ extension ConnectWork {
             alog("🎉 ConnectWork: Connected to node: \(node.name)")
         }
         await XCTunnelManager.share.setStatus(.connected)
-        self.complete(context)
+        var ctx = context
+        ctx.success = true
+        self.complete(ctx)
     }
     
     func faile(context: ConnectContext) async throws {
@@ -350,12 +353,15 @@ extension ConnectWork {
         alog("❌ ConnectWork: Setting status to failed and stopping tunnel")
         await XCTunnelManager.share.setStatus(.realDisconnected)
         try await XCTunnelManager.share.stop()
+        var ctx = context
+        ctx.success = false
+        self.complete(ctx)
         throw NSError(domain: "Connect faile", code: -1)
     }
 }
 
 extension ConnectWork {
-    public static func fire(_ city: Citys_response?, complete: @escaping (ConnectContext) -> Void) async throws {
+    public static func fire(_ city: Citys_response?, complete: @Sendable @escaping (ConnectContext) -> Void) async throws {
         alog("🔥 ConnectWork: Static fire method called")
         if let city = city {
             alog("🔥 ConnectWork: Using specified city: \(city.city)")
