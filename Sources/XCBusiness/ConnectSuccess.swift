@@ -70,6 +70,7 @@ public actor ConnectSuccess {
                             group.cancelAll()
                             alog("🧪 ConnectWork: Network test sub result: true, group.cancelAll()")
                             c.resume(returning: true)
+                            return
                         }
                         
                         // 达到失败率就取消剩余任务
@@ -77,9 +78,11 @@ public actor ConnectSuccess {
                             group.cancelAll()
                             alog("🧪 ConnectWork: Network test sub result: false, group.cancelAll()")
                             c.resume(returning: false)
+                            return
                         }
                     }
                     c.resume(returning: false)
+                    return
                 }
             }
         }
