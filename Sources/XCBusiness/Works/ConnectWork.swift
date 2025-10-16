@@ -210,10 +210,17 @@ extension ConnectWork {
             alog("🌐 ConnectWork: Node index out of bounds (\(context.node_index) >= \(context.nodes.count)), retrying...")
             ctx.retry += 1
             ctx.node_index = 0
+            #if DEBUG
+            nodes_result = try await NodeRequestWork.fire(
+                city_id: ctx.city.id,
+                retry: 4
+            )
+            #else
             nodes_result = try await NodeRequestWork.fire(
                 city_id: ctx.city.id,
                 retry: ctx.retry
             )
+            #endif
         } else {
             nodes_result = ctx.nodes
         }
