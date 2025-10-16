@@ -7,34 +7,22 @@ import VPNConnectionChecker
 extension NEVPNManager: @unchecked Sendable {}
 
 public actor ConnectSuccess {
-    public static func isSuccess(retry: Int = 1) async throws -> Bool {
-        let status_3 = try await XCTunnelManager.share.getManager().connection.status
-        if status_3 == .disconnected || status_3 == .disconnecting || status_3 == .invalid {
+    public static func isSuccess() async throws -> Bool {
+        for index in 0 ..< 3 {
             let result = await ConnectSuccess._isSuccess()
-            let status_3 = try await XCTunnelManager.share.getManager().connection.status
-            if status_3 == .disconnected || status_3 == .disconnecting || status_3 == .invalid {
-                if result {
-                    alog("🧪 ConnectWork: Network test result: Success retry: \(retry)")
-                    return true
+            let sysStatus_pre = try await XCTunnelManager.share.getManager().connection.status
+            if sysStatus_pre == .disconnected || sysStatus_pre == .disconnecting || sysStatus_pre == .invalid {
+                return false
+            }
+            if result {
+                let sysStatus_next = try await XCTunnelManager.share.getManager().connection.status
+                if sysStatus_next == .disconnected || sysStatus_next == .disconnecting || sysStatus_next == .invalid {
+                    return false
                 } else {
-                    let status_3 = try await XCTunnelManager.share.getManager().connection.status
-                    if status_3 == .disconnected || status_3 == .disconnecting || status_3 == .invalid {
-                        if retry <= 3 {
-                            return try await ConnectSuccess.isSuccess(retry: retry + 1)
-                        } else {
-                            // 重试结束，连接失败
-                            alog("🧪 ConnectWork: Network test result: faile retry: \(retry)")
-                            return false
-                        }
-                    } else {
-                        // VPN未连接
-                        alog("🧪 ConnectWork: Network test result: faile retry: \(retry)")
-                        return false
-                    }
+                    return true
                 }
             }
         }
-        alog("🧪 ConnectWork: Network test result: faile retry: \(retry)")
         return false
     }
     
@@ -81,13 +69,13 @@ public actor ConnectSuccess {
             }
             return false
         }
+#if DEBUG
+        return false
+#endif
         return result
     }
     
     public static func test(_ url: String) async -> Bool {
-        #if DEBUG
-        return false
-        #endif
         let work = URLTestWork(url: url)
         do {
             let _:[Node_response] = try await XCBusiness.share.run(work, returnType: nil)
