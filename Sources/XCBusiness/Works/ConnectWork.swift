@@ -389,6 +389,6 @@ func alog(_ format: String, _ args: any CVarArg...) {
 }
 #else
 func alog(_ format: String, _ args: any CVarArg...) {
-    NSLog(format, args)
+    
 }
 #endif
