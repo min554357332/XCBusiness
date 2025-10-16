@@ -329,7 +329,7 @@ extension ConnectWork {
         } else {
             Events.connect_failed.fire()
             let status = await XCTunnelManager.share.getStatus()
-            if status != .network_availability_testing {
+            if status == .disconnected || status == .disconnecting {
                 try await self.setStatus(.faile(context: context))
                 return
             }
