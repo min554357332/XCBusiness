@@ -372,8 +372,9 @@ extension ConnectWork {
             guard let argeement = context.node?.agreement else { return }
             do {
                 try await ReportRequestWork.fire(name: node_name, retry: retry, core: core, agreement: argeement, event: event)
+                alog("❌ ConnectWork: report success: \n name:\(node_name) \n retry:\(retry) \n core:\(core) \n protocol:\(argeement) \n event:\(event)")
             } catch {
-                alog("❌ ConnectWork: report failed: \(error)")
+                alog("❌ ConnectWork: report failed: \n name:\(node_name) \n retry:\(retry) \n core:\(core) \n protocol:\(argeement) \n event:\(event)")
             }
         }
     }
