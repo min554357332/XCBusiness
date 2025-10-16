@@ -86,15 +86,25 @@ public actor ConnectSuccess {
     }
     
     public static func test(_ url: String) async -> Bool {
-        let work = URLTestWork(url: url)
-        do {
-            let _:[Node_response] = try await XCBusiness.share.run(work, returnType: nil)
-            alog("true === \(url)")
-            return true
-        } catch {
-            alog("false === \(url)")
-            alog("ConnectWork: Network test err: \(error)")
-            return false
+//        let work = URLTestWork(url: url)
+//        do {
+//            let _:[Node_response] = try await XCBusiness.share.run(work, returnType: nil)
+//            alog("true === \(url)")
+//            return true
+//        } catch {
+//            alog("false === \(url)")
+//            alog("ConnectWork: Network test err: \(error)")
+//            return false
+//        }
+        let request = AF.request(url) { req in
+            req.timeoutInterval = 10
+            req.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
+        }
+        let task = request.serializingData()
+        _ = try await task.value
+        let response = await task.response
+        if response.response?.statusCode == nil {
+            throw NSError(domain: "not http code", code: response.response?.statusCode ?? -1)
         }
     }
 }
