@@ -76,7 +76,7 @@ public extension NodeGetGithubWork {
             }
             group.addTask {
                 do {
-                    return (work_2, try await XCBusiness.share.run(work_1, returnType: Node_response.self))
+                    return (work_2, try await XCBusiness.share.run(work_2, returnType: Node_response.self))
                 } catch {
                     alog("ConnectWork: github node err: \(error)")
                     return (work_2, [])
