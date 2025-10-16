@@ -61,7 +61,7 @@ public actor ConnectSuccess {
                     failed_count += 1
                 }
                 // 达到成功率就取消剩余任务
-                if (Double(success_count) / Double(count)) > success_rate {
+                if (Double(success_count) / Double(count)) >= success_rate {
                     group.cancelAll()
                     return true
                 }

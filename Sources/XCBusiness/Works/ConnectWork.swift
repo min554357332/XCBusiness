@@ -21,9 +21,6 @@ public extension NEVPNStatus {
             continuation.onTermination = { _ in
                 NotificationCenter.default.removeObserver(observer)
             }
-            
-            // 注意：这是一个无限流，依赖消费者取消来结束
-            // 在 VPN 状态监听场景中这是正常的，因为我们需要持续监听状态变化
         }
     }
 }
@@ -205,13 +202,13 @@ extension ConnectWork {
         alog("🌐 ConnectWork: Received \(nodes_result.count) nodes")
         
         // 节点为空时，尝试从 GitHub 获取
-        if nodes_result.isEmpty {
+        if nodes_result.isEmpty && context.retry == 1 {
             alog("🌐 ConnectWork: No nodes available, switching to GitHub nodes")
             var ctx = context
             ctx.nodes = []
             ctx.node = nil
             ctx.node_index = 0
-            ctx.retry = 1
+            ctx.retry = 1000
             try await self.setStatus(.fetchGithubNode(context: ctx))
             return
         }
@@ -310,7 +307,7 @@ extension ConnectWork {
         
         // 为网络测试添加超时保护
         let startTime = Date()
-        let result = await ConnectSuccess.isSuccess()
+        var result = await ConnectSuccess.isSuccess()
         let duration = Date().timeIntervalSince(startTime)
         
         alog("🧪 ConnectWork: Network test completed in \(String(format: "%.2f", duration))s")
