@@ -44,41 +44,43 @@ public actor ConnectSuccess {
         
         
         let result: Bool = await withCheckedContinuation { c in
-            await withTaskGroup(of: Bool.self) { group in
-                var success_count = 0
-                var failed_count = 0
-                let count = test_urls.count
-                for test_url in test_urls {
-                    group.addTask {
-                        if Task.isCancelled {
-                            return false
+            Task {
+                await withTaskGroup(of: Bool.self) { group in
+                    var success_count = 0
+                    var failed_count = 0
+                    let count = test_urls.count
+                    for test_url in test_urls {
+                        group.addTask {
+                            if Task.isCancelled {
+                                return false
+                            }
+                            let result =  await ConnectSuccess.test(test_url)
+                            alog("🧪 ConnectWork: Network test sub result: \(result)")
+                            return result
                         }
-                        let result =  await ConnectSuccess.test(test_url)
-                        alog("🧪 ConnectWork: Network test sub result: \(result)")
-                        return result
                     }
+                    for await res in group {
+                        if res {
+                            success_count += 1
+                        } else {
+                            failed_count += 1
+                        }
+                        // 达到成功率就取消剩余任务
+                        if (Double(success_count) / Double(count)) >= success_rate {
+                            group.cancelAll()
+                            alog("🧪 ConnectWork: Network test sub result: true, group.cancelAll()")
+                            c.resume(returning: true)
+                        }
+                        
+                        // 达到失败率就取消剩余任务
+                        if (Double(failed_count) / Double(count)) > (1 - success_rate) {
+                            group.cancelAll()
+                            alog("🧪 ConnectWork: Network test sub result: false, group.cancelAll()")
+                            c.resume(returning: false)
+                        }
+                    }
+                    c.resume(returning: false)
                 }
-                for await res in group {
-                    if res {
-                        success_count += 1
-                    } else {
-                        failed_count += 1
-                    }
-                    // 达到成功率就取消剩余任务
-                    if (Double(success_count) / Double(count)) >= success_rate {
-                        group.cancelAll()
-                        alog("🧪 ConnectWork: Network test sub result: true, group.cancelAll()")
-                        c.resume(returning: true)
-                    }
-                    
-                    // 达到失败率就取消剩余任务
-                    if (Double(failed_count) / Double(count)) > (1 - success_rate) {
-                        group.cancelAll()
-                        alog("🧪 ConnectWork: Network test sub result: false, group.cancelAll()")
-                        c.resume(returning: false)
-                    }
-                }
-                c.resume(returning: false)
             }
         }
 #if DEBUG
