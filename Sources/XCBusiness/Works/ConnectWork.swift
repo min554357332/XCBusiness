@@ -201,7 +201,7 @@ extension ConnectWork {
         var ctx = context
         let nodes_result: [Node_response]
         // 节点索引越界时
-        if context.nodes.count <= context.node_index {
+        if ctx.node != nil && context.nodes.count <= context.node_index {
             alog("🌐 ConnectWork: Node index out of bounds (\(context.node_index) >= \(context.nodes.count)), retrying...")
             ctx.retry += 1
             ctx.node_index = 0
@@ -338,7 +338,6 @@ extension ConnectWork {
             }
             
             var ctx = context
-            ctx.node = nil
             ctx.node_index += 1
             try await self.setStatus(.fetchNode(context: ctx))
         }
