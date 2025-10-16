@@ -245,6 +245,9 @@ extension ConnectWork {
         
         alog("🐙 ConnectWork: Fetching GitHub nodes...")
         
+        try await XCTunnelManager.share.stop()
+        try await Task.sleep(nanoseconds: 500_000_000)
+        
         let nodes_result = try await NodeGetGithubWork.fire()
         alog("🐙 ConnectWork: Received \(nodes_result.count) GitHub nodes")
         
