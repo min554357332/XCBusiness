@@ -3,6 +3,7 @@ import NetworkExtension
 import XCTunnelManager
 import XCNetwork
 import VPNConnectionChecker
+import Alamofire
 
 extension NEVPNManager: @unchecked Sendable {}
 
@@ -52,9 +53,14 @@ public actor ConnectSuccess {
                     if Task.isCancelled {
                         return false
                     }
-                    let result =  await ConnectSuccess.test(test_url)
-                    alog("🧪 ConnectWork: Network test sub result: \(result)")
-                    return result
+                    do {
+                        let test_result = try await ConnectSuccess.test(test_url)
+                        alog("🧪 ConnectWork: Network test sub result: \(test_result)")
+                        return test_result
+                    } catch {
+                        alog("🧪 ConnectWork: Network test sub result: false")
+                        return false
+                    }
                 }
             }
             for await res in group {
@@ -85,7 +91,7 @@ public actor ConnectSuccess {
         return result
     }
     
-    public static func test(_ url: String) async -> Bool {
+    public static func test(_ url: String) async throws -> Bool {
 //        let work = URLTestWork(url: url)
 //        do {
 //            let _:[Node_response] = try await XCBusiness.share.run(work, returnType: nil)
@@ -106,5 +112,6 @@ public actor ConnectSuccess {
         if response.response?.statusCode == nil {
             throw NSError(domain: "not http code", code: response.response?.statusCode ?? -1)
         }
+        return true
     }
 }
